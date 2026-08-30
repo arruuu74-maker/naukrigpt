@@ -6,14 +6,9 @@ export default async function handler(req, res) {
 
   try {
     const { message } = req.body;
-    if (!message) {
-      return res.status(200).json({ reply: "Bolo bhai kya help chahiye?" });
-    }
+    if (!message) return res.status(200).json({ reply: "Bolo bhai?" });
 
     const groqKey = process.env.GROQ_API_KEY;
-    if (!groqKey) {
-      return res.status(200).json({ reply: "ERROR: GROQ_API_KEY Vercel me add nahi hai." });
-    }
 
     const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
@@ -22,31 +17,20 @@ export default async function handler(req, res) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "llama-3.3-70b-versatile",
+        model: "openai/gpt-oss-20b",
         temperature: 0.7,
         messages: [
-          {
-            role: "system",
-            content: "You are NaukriGPT, expert career counsellor for BCA students in India. Reply in Hinglish (Hindi + English), detailed, point-wise, helpful like ChatGPT. Use emojis lightly."
-          },
-          {
-            role: "user",
-            content: message
-          }
+          { role: "system", content: "You are NaukriGPT, expert BCA career counsellor. Reply in Hinglish detailed." },
+          { role: "user", content: message }
         ]
       })
     });
 
     const data = await groqRes.json();
-
-    if (!data.choices) {
-      return res.status(200).json({ reply: "Groq Error: " + JSON.stringify(data).slice(0, 400) });
-    }
-
-    const reply = data.choices[0].message.content;
+    const reply = data.choices?.[0]?.message?.content || "Groq Error: " + JSON.stringify(data).slice(0,500);
     return res.status(200).json({ reply });
 
   } catch (err) {
-    return res.status(200).json({ reply: "Server Error: " + err.message });
+    return res.status(200).json({ reply: "Error: " + err.message });
   }
 }
