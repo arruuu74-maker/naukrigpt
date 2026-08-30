@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-  // CORS Fix
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -11,32 +10,26 @@ export default async function handler(req, res) {
   if (!message) return res.status(400).json({ error: 'Message required' });
 
   const apiKey = process.env.GEMINI_API_KEY?.trim();
-  if (!apiKey) return res.status(200).json({ reply: "API Key Vercel me set nahi hai!" });
+  if (!apiKey) return res.status(200).json({ reply: "API Key set nahi hai Vercel me!" });
 
-  try {
-    // LATEST MODEL - 2026 working
-    const model = "gemini-2.0-flash";
-    const url = `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${apiKey}`;
+  const MODELS_TO_TRY = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-flash-latest"];
 
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ role: "user", parts: [{ text: `You are NaukriGPT - Expert for BCA students in India. Answer in Hinglish, friendly, concise, helpful with roadmap, skills, jobs. Question: ${message}` }] }],
-        generationConfig: { temperature: 0.7, maxOutputTokens: 1000 }
-      })
-    });
-
-    const data = await response.json();
-
-    if (data.error) {
-      return res.status(200).json({ reply: `Error: ${data.error.message}` });
-    }
-
-    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
-    return res.status(200).json({ reply: reply || "Bhai samjha nahi, fir se pucho!", text: reply });
-
-  } catch (err) {
-    return res.status(200).json({ reply: "Thoda network issue hai, 2 sec baad try kar bhai! " + err.message });
+  for (const model of MODELS_TO_TRY) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: `You are NaukriGPT - BCA career guide. Reply in Hinglish friendly. Q: ${message}` }] }]
+        })
+      });
+      const data = await response.json();
+      if (data.candidates?.[0]?.content?.parts?.[0]?.text) {
+        return res.status(200).json({ reply: data.candidates[0].content.parts[0].text });
+      }
+    } catch (e) { continue; }
   }
+
+  return res.status(200).json({ reply: "Bhai model busy hai, 5 sec baad try kar!" });
 }
