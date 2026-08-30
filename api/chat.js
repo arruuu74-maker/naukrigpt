@@ -12,7 +12,7 @@ export default async function handler(req, res) {
 
     const groqKey = process.env.GROQ_API_KEY;
     if (!groqKey) {
-      return res.status(200).json({ reply: "ERROR: GROQ_API_KEY Vercel me add nahi hai. Environment Variables me add karo." });
+      return res.status(200).json({ reply: "ERROR: GROQ_API_KEY Vercel me add nahi hai." });
     }
 
     const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -22,12 +22,12 @@ export default async function handler(req, res) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "llama-3.1-8b-instant",
+        model: "llama3-8b-8192",
         temperature: 0.7,
         messages: [
           {
             role: "system",
-            content: "You are NaukriGPT, expert career counsellor for BCA students in India. Reply in Hinglish (Hindi + English), detailed, point-wise, helpful like ChatGPT. Use emojis lightly."
+            content: "You are NaukriGPT, expert career counsellor for BCA students in India. Reply in Hinglish (Hindi + English), detailed, point-wise, friendly like ChatGPT. Use emojis lightly."
           },
           {
             role: "user",
