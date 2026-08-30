@@ -6,27 +6,47 @@ export default async function handler(req, res) {
 
   try {
     const { message } = req.body;
-    const key = process.env.GEMINI_API_KEY;
+    if (!message) {
+      return res.status(200).json({ reply: "Bolo bhai kya help chahiye?" });
+    }
 
-    // 1. Pehle available models ki list le le
-    const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
-    const list = await listRes.json();
-    const model = list.models?.find(m => m.supportedGenerationMethods?.includes("generateContent"))?.name || "models/gemini-2.5-flash";
-    const modelId = model.replace("models/","");
+    const groqKey = process.env.GROQ_API_KEY;
+    if (!groqKey) {
+      return res.status(200).json({ reply: "ERROR: GROQ_API_KEY Vercel me add nahi hai. Environment Variables me add karo." });
+    }
 
-    // 2. Ab us model se answer le
-    const genRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=${key}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${groqKey}`,
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
-        contents: [{ parts: [{ text: `You are NaukriGPT, helpful BCA career guide. Answer in Hinglish detailed: ${message}` }] }]
+        model: "llama-3.1-8b-instant",
+        temperature: 0.7,
+        messages: [
+          {
+            role: "system",
+            content: "You are NaukriGPT, expert career counsellor for BCA students in India. Reply in Hinglish (Hindi + English), detailed, point-wise, helpful like ChatGPT. Use emojis lightly."
+          },
+          {
+            role: "user",
+            content: message
+          }
+        ]
       })
     });
-    const data = await genRes.json();
-    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || `Error: ${JSON.stringify(data).slice(0,300)}`;
 
+    const data = await groqRes.json();
+
+    if (!data.choices) {
+      return res.status(200).json({ reply: "Groq Error: " + JSON.stringify(data).slice(0, 300) });
+    }
+
+    const reply = data.choices[0].message.content;
     return res.status(200).json({ reply });
-  } catch (e) {
-    return res.status(200).json({ reply: "Server Error: " + e.message });
+
+  } catch (err) {
+    return res.status(200).json({ reply: "Server Error: " + err.message });
   }
 }
