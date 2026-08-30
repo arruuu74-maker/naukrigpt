@@ -1,42 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NaukriGPT - AI Career Coach for BCA</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NaukriGPT - AI for BCA</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#fff;min-height:100vh}
-.nav{padding:20px;display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto}
-.logo{font-size:24px;font-weight:800} .logo span{color:#4f46e5}
-.hero{max-width:1200px;margin:40px auto;padding:20px;text-align:center}
-.badge{background:#1e1e1e;border:1px solid #333;padding:8px 16px;border-radius:20px;display:inline-block;font-size:14px;margin-bottom:20px}
-h1{font-size:48px;line-height:1.1;margin-bottom:20px} h1 span{color:#4f46e5}
-p.sub{color:#999;font-size:18px;margin-bottom:30px}
-.btns{display:flex;gap:15px;justify-content:center;flex-wrap:wrap}
-.btn{padding:14px 28px;border-radius:10px;border:none;font-weight:600;font-size:16px;cursor:pointer}
-.btn-p{background:#fff;color:#000} .btn-s{background:#1e1e1e;color:#fff;border:1px solid #333}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:60px;text-align:left}
-.card{background:#111;border:1px solid #222;padding:24px;border-radius:16px}
-.card h3{margin-bottom:10px} .card p{color:#888;font-size:14px}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui;background:#0a0a0a;color:#fff;min-height:100vh}
+.top{display:flex;justify-content:space-between;padding:18px;max-width:1100px;margin:auto}
+.logo{font-weight:800;font-size:22px}.logo span{color:#6366f1}
+.hero{text-align:center;padding:20px}.badge{background:#1e1e1e;border:1px solid #333;padding:6px 14px;border-radius:20px;font-size:13px}
+h1{font-size:30px;margin:12px 0}h1 span{color:#6366f1}
+.box{max-width:780px;margin:auto;padding:16px}
+#msgs{height:58vh;overflow:auto;display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.m{padding:12px 16px;border-radius:14px;max-width:85%;font-size:14.5px;line-height:1.5}
+.u{background:#fff;color:#000;align-self:flex-end}.b{background:#1e1e1e;border:1px solid #2a2a2a;align-self:flex-start}
+.row{display:flex;gap:8px;background:#1e1e1e;border:1px solid #333;border-radius:12px;padding:6px}
+.row input{flex:1;background:transparent;border:0;color:#fff;outline:0;padding:8px;font-size:16px}
+.row button{background:#fff;color:#000;border:0;padding:10px 18px;border-radius:8px;font-weight:700}
 </style>
 </head>
 <body>
-<div class="nav"><div class="logo">Naukri<span>GPT</span></div><div style="color:#666">BCA Edition</div></div>
-<div class="hero">
-<div class="badge">🔥 LIVE - Made by arruuu74-maker</div>
-<h1>Your AI Career Coach for <br><span>BCA Students</span></h1>
-<p class="sub">Resume Review, Interview Prep, Job Roadmaps - All in one place</p>
-<div class="btns">
-<button class="btn btn-p" onclick="alert('NaukriGPT Chat Coming Soon!')">Start Chatting →</button>
-<button class="btn btn-s" onclick="window.open('https://github.com/arruuu74-maker/naukrigpt')">GitHub</button>
+<div class="top"><div class="logo">Naukri<span>GPT</span></div><div style="color:#666">BCA</div></div>
+<div class="hero"><div class="badge">🔥 LIVE - arruuu74</div><h1>Ask Anything About <span>BCA Career</span></h1></div>
+<div class="box">
+<div id="msgs"><div class="m b">Hi Chiraag! 👋 Main NaukriGPT hu. Resume, Interview, Roadmap - kuch bhi puch lo!</div></div>
+<div class="row"><input id="inp" placeholder="e.g. BCA ke baad best course?"><button onclick="send()">Send</button></div>
 </div>
-<div class="cards">
-<div class="card"><h3>📄 Resume Analyzer</h3><p>AI will check your resume and give ATS score + improvements</p></div>
-<div class="card"><h3>💼 Interview Prep</h3><p>BCA specific questions - DBMS, Java, DSA, OOPS</p></div>
-<div class="card"><h3>🗺️ Career Roadmap</h3><p>From fresher to 10 LPA - Step by step path</p></div>
-</div>
-<p style="margin-top:60px;color:#444">naukrigpt.vercel.app • Deployed with Vercel</p>
-</div>
+<script>
+async function send(){
+let inp=document.getElementById('inp'),txt=inp.value.trim();if(!txt)return;
+let box=document.getElementById('msgs');box.innerHTML+=`<div class="m u">${txt}</div>`;inp.value='';box.scrollTop=box.scrollHeight;
+box.innerHTML+=`<div class="m b" id="t">Typing...</div>`;
+try{
+let r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:txt})});
+let d=await r.json();document.getElementById('t').remove();box.innerHTML+=`<div class="m b">${d.reply}</div>`;
+}catch(e){document.getElementById('t').innerText='Error: Vercel me API Key check karo';}
+box.scrollTop=box.scrollHeight;
+}
+document.getElementById('inp').addEventListener('keydown',e=>{if(e.key==='Enter')send()});
+</script>
 </body>
 </html>
