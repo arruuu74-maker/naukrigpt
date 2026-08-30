@@ -5,17 +5,13 @@ export default async function handler(req,res){
  if(req.method==='OPTIONS') return res.status(200).end();
  const {message}= (typeof req.body==='string'? JSON.parse(req.body):req.body) || {};
  const key=process.env.GEMINI_API_KEY?.trim();
+ if(!key) return res.json({reply:"VERCEL ME KEY NAHI MILI!"});
  try{
-  const models=["gemini-2.5-flash","gemini-1.5-flash","gemini-1.5-flash-latest","gemini-2.0-flash"];
-  for(const m of models){
-   const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${key}`,{
-    method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({contents:[{parts:[{text:`You are NaukriGPT, BCA career expert. Reply in Hinglish, helpful, like ChatGPT. User: ${message}` }]}]})
-   });
+   const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${key}`;
+   const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:message}]}]})});
    const d=await r.json();
+   if(d.error) return res.json({reply:"REAL ERROR: "+JSON.stringify(d.error)});
    const t=d.candidates?.[0]?.content?.parts?.[0]?.text;
-   if(t) return res.json({reply:t});
-  }
-  return res.json({reply:"Bhai abhi thoda busy hai, 2 sec me fir puch!"});
- }catch(e){ return res.json({reply:"Network issue: "+e.message}); }
+   return res.json({reply:t||"No reply from Gemini: "+JSON.stringify(d)});
+ }catch(e){ return res.json({reply:"CATCH ERROR: "+e.message}); }
 }
