@@ -1,4 +1,5 @@
 export default async function handler(req, res) {
+  // CORS Fix
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -13,21 +14,29 @@ export default async function handler(req, res) {
   if (!apiKey) return res.status(200).json({ reply: "API Key Vercel me set nahi hai!" });
 
   try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: `You are NaukriGPT - BCA career expert. Reply in Hinglish, friendly, helpful. Question: ${message}` }] }]
-        })
-      }
-    );
+    // LATEST MODEL - 2026 working
+    const model = "gemini-2.0-flash";
+    const url = `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${apiKey}`;
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ role: "user", parts: [{ text: `You are NaukriGPT - Expert for BCA students in India. Answer in Hinglish, friendly, concise, helpful with roadmap, skills, jobs. Question: ${message}` }] }],
+        generationConfig: { temperature: 0.7, maxOutputTokens: 1000 }
+      })
+    });
+
     const data = await response.json();
-    if (data.error) return res.status(200).json({ reply: `Gemini Error: ${data.error.message}` });
-    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Samjha nahi bhai, fir se puch!";
-    return res.status(200).json({ reply, text: reply });
+
+    if (data.error) {
+      return res.status(200).json({ reply: `Error: ${data.error.message}` });
+    }
+
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    return res.status(200).json({ reply: reply || "Bhai samjha nahi, fir se pucho!", text: reply });
+
   } catch (err) {
-    return res.status(200).json({ reply: "Network issue: " + err.message });
+    return res.status(200).json({ reply: "Thoda network issue hai, 2 sec baad try kar bhai! " + err.message });
   }
 }
