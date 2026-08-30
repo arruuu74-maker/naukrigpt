@@ -4,31 +4,32 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+  const body = typeof req.body === 'string'? JSON.parse(req.body) : req.body;
   const apiKey = process.env.GEMINI_API_KEY?.trim();
+  if (!apiKey) return res.json({ reply: "Vercel me KEY nahi hai" });
 
-  // Check key
-  if (!apiKey) return res.json({ reply: "KEY HI NAHI HAI VERCEL ME" });
+  // Ab ke new users ke liye jo chalta hai
+  const MODELS = [
+    "gemini-2.0-flash",
+    "gemini-2.0-flash-lite",
+    "gemini-1.5-flash",
+    "gemini-1.5-flash-8b"
+  ];
 
-  // List models - asli sach batayega
-  const listRes = await fetch(`https://generativelanguage.googleapis.com/v1/models?key=${apiKey}`);
-  const listData = await listRes.json();
-
-  if (listData.error) {
-    return res.json({ reply: `KEY ERROR: ${listData.error.message}. Nayi key banao aistudio.google.com se` });
+  for (const model of MODELS) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${apiKey}`;
+      const r = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: `You are NaukriGPT, BCA career expert. Answer in Hinglish, detailed: ${body.message}` }] }]
+        })
+      });
+      const data = await r.json();
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (text) return res.json({ reply: text });
+    } catch (e) { continue; }
   }
-
-  // Working model lelo
-  const firstModel = listData.models?.find(m => m.supportedGenerationMethods?.includes("generateContent"))?.name || "models/gemini-1.5-flash";
-  const modelName = firstModel.replace("models/","");
-
-  const genRes = await fetch(`https://generativelanguage.googleapis.com/v1/models/${modelName}:generateContent?key=${apiKey}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ contents: [{ parts: [{ text: `BCA career expert, answer in hinglish: ${body.message}` }] }] })
-  });
-  const genData = await genRes.json();
-  const text = genData.candidates?.[0]?.content?.parts?.[0]?.text;
-  
-  return res.json({ reply: text || `MODEL ERROR: ${JSON.stringify(genData).slice(0,300)}` });
+  return res.json({ reply: "Sab models fail. Nayi key banao aistudio.google.com se." });
 }
