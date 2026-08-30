@@ -22,12 +22,12 @@ export default async function handler(req, res) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "llama3-8b-8192",
+        model: "llama-3.3-70b-versatile",
         temperature: 0.7,
         messages: [
           {
             role: "system",
-            content: "You are NaukriGPT, expert career counsellor for BCA students in India. Reply in Hinglish (Hindi + English), detailed, point-wise, friendly like ChatGPT. Use emojis lightly."
+            content: "You are NaukriGPT, expert career counsellor for BCA students in India. Reply in Hinglish (Hindi + English), detailed, point-wise, helpful like ChatGPT. Use emojis lightly."
           },
           {
             role: "user",
@@ -40,7 +40,7 @@ export default async function handler(req, res) {
     const data = await groqRes.json();
 
     if (!data.choices) {
-      return res.status(200).json({ reply: "Groq Error: " + JSON.stringify(data).slice(0, 300) });
+      return res.status(200).json({ reply: "Groq Error: " + JSON.stringify(data).slice(0, 400) });
     }
 
     const reply = data.choices[0].message.content;
