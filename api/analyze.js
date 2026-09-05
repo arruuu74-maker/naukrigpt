@@ -1,6 +1,6 @@
 // api/analyze.js — AI Resume Analyzer backend (Vercel Serverless Function)
 export default async function handler(req, res) {
-  if (req.method!== 'POST') {
+  if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
@@ -54,19 +54,4 @@ Rules:
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.4, maxOutputTokens: 1500 }
-        })
-      }
-    );
-    const data = await r.json();
-    let text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    text = text.replace(/```json|```/g, '').trim();
-    const start = text.indexOf('{'), end = text.lastIndexOf('}');
-    if (start === -1 || end === -1) throw new Error('Invalid AI response');
-    const result = JSON.parse(text.slice(start, end + 1));
-    return res.status(200).json(result);
-  } catch (e) {
-    console.error('Analyze error:', e.message);
-    return res.status(500).json({ error: 'Analysis fail ho gayi. Thodi der baad dobara try kar.' });
-  }
-}
+          generationConfig: { temperature:
