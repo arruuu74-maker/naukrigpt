@@ -1,6 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head><style>
+@font-face {
+  font-family: "Optimistic";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/OptimisticAI_VF_Optimized.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Optimistic Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/OptimisticMono_W_TextRegular.woff2") format("woff2");
+}
+:where(html) {
+  font-family: "Optimistic", system-ui, sans-serif;
+}
+:where(code, pre, kbd, samp) {
+  font-family: "Optimistic Mono", ui-monospace, monospace;
+}
+</style>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NaukriGPT - AI Career Counsellor for Students</title>
@@ -122,5 +143,69 @@ footer{text-align:center;margin-top:50px;color:#64748b;font-size:12px}
 </div>
 <footer><b style="color:#c084fc">NaukriGPT</b> — Learn Together, Grow Together 💜<br><br>Made with ❤️ for BCA students across India</footer>
 </div>
-</body>
+<!-- ===== AI Course Counsellor Chatbot ===== -->
+<style>
+#ai-fab{position:fixed;bottom:20px;right:20px;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#2563eb);border:none;font-size:28px;cursor:pointer;z-index:1000;box-shadow:0 4px 20px rgba(139,92,246,.5);display:flex;align-items:center;justify-content:center}
+#ai-fab:hover{transform:scale(1.08)}
+#ai-win{position:fixed;bottom:92px;right:20px;width:min(360px,calc(100vw - 40px));height:480px;max-height:calc(100vh - 120px);background:#12122a;border:1px solid rgba(168,85,247,.35);border-radius:18px;z-index:1000;display:none;flex-direction:column;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.6)}
+#ai-win.open{display:flex}
+#ai-head{background:linear-gradient(90deg,#8b5cf6,#2563eb);padding:14px 16px;display:flex;align-items:center;gap:10px}
+#ai-head .t{flex:1}
+#ai-head .t b{font-size:15px}
+#ai-head .t p{font-size:11px;color:#e9d5ff;margin-top:2px}
+#ai-close{background:rgba(255,255,255,.15);border:none;color:#fff;font-size:16px;width:28px;height:28px;border-radius:8px;cursor:pointer}
+#ai-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.ai-m{max-width:82%;padding:10px 13px;border-radius:14px;font-size:13.5px;line-height:1.55;white-space:pre-line}
+.ai-bot{background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.25);align-self:flex-start;border-bottom-left-radius:4px}
+.ai-user{background:linear-gradient(90deg,#8b5cf6,#2563eb);align-self:flex-end;border-bottom-right-radius:4px}
+.ai-typing{align-self:flex-start;color:#94a3b8;font-size:13px}
+#ai-chips{display:flex;gap:6px;padding:0 14px 8px;flex-wrap:wrap}
+.ai-chip{border:1px solid rgba(168,85,247,.4);background:rgba(168,85,247,.1);color:#d8b4fe;border-radius:999px;padding:5px 12px;font-size:12px;cursor:pointer}
+.ai-chip:hover{background:rgba(168,85,247,.25)}
+#ai-input{display:flex;gap:8px;padding:12px 14px;border-top:1px solid rgba(255,255,255,.08)}
+#ai-text{flex:1;background:#0d0d20;border:1px solid rgba(255,255,255,.12);border-radius:10px;color:#fff;padding:10px 12px;font-size:13px;font-family:inherit}
+#ai-text:focus{outline:none;border-color:rgba(168,85,247,.6)}
+#ai-send{background:linear-gradient(90deg,#8b5cf6,#2563eb);border:none;color:#fff;border-radius:10px;padding:10px 16px;font-size:14px;font-weight:700;cursor:pointer}
+</style>
+<button id="ai-fab" onclick="toggleAI()" aria-label="AI Course Counsellor">🤖</button>
+<div id="ai-win">
+<div id="ai-head">
+<div style="font-size:28px">🤖</div>
+<div class="t"><b>AI Course Counsellor</b><p>Course, roadmap, career — kuch bhi pucho!</p></div>
+<button id="ai-close" onclick="toggleAI()">✕</button>
+</div>
+<div id="ai-msgs"></div>
+<div id="ai-chips"></div>
+<div id="ai-input">
+<input id="ai-text" placeholder="Apna sawal likho..." onkeypress="if(event.key==='Enter')sendAI()">
+<button id="ai-send" onclick="sendAI()">➤</button>
+</div>
+</div>
+<script>
+const AI_KB=[
+{k:["java","spring"],r:"☕ **Java Roadmap:**\n\n1️⃣ Core Java (OOPs, Collections, Exception Handling) — 4-6 weeks\n2️⃣ DSA in Java — 6-8 weeks\n3️⃣ JDBC + MySQL — 2 weeks\n4️⃣ Spring Boot (REST APIs) — 4-6 weeks\n5️⃣ Project: Full-stack app banao!\n\n📚 Free: Telusko (YouTube), Java Brains\n💼 Java se TCS, Infosys me backend roles milte hai!"},
+{k:["python","django","flask"],r:"🐍 **Python Roadmap:**\n\n1️⃣ Python basics (loops, functions, OOP) — 3-4 weeks\n2️⃣ DSA in Python — 5-6 weeks\n3️⃣ Flask/Django (web framework) — 4 weeks\n4️⃣ SQL + PostgreSQL — 2-3 weeks\n5️⃣ Project: Blog ya E-commerce API\n\n📚 Free: CodeWithHarry (YouTube), CS50P (Harvard)\n💼 Python se Data Analyst, Backend, ML roles!"},
+{k:["dsa","data structure","algorithm"],r:"🧠 **DSA kaise seekhu:**\n\n1️⃣ Pehle ek language pakad lo (Java/Python)\n2️⃣ Arrays → Strings → Linked List → Stack/Queue\n3️⃣ Trees → Graphs → DP (last me!)\n4️⃣ Roz 2-3 problems: LeetCode / CodeStudio\n\n⏰ Daily 1-2 hours, 4-6 months me strong!\n💡 Striver's A2Z Sheet follow karo — best free resource hai!"},
+{k:["web","mern","react","frontend","website"],r:"🌐 **Web Dev (MERN) Roadmap:**\n\n1️⃣ HTML + CSS + JavaScript — 6 weeks\n2️⃣ React.js — 4 weeks\n3️⃣ Node.js + Express — 4 weeks\n4️⃣ MongoDB — 2 weeks\n5️⃣ 2-3 full projects banao!\n\n📚 Free: Apna College (YouTube), freeCodeCamp\n💼 MERN se startups me jaldi job milti hai!"},
+{k:["sql","database","dbms"],r:"🗄️ **SQL/DBMS:**\n\n1️⃣ SELECT, WHERE, JOINs — 2 weeks\n2️⃣ GROUP BY, Subqueries — 1 week\n3️⃣ Normalization, Indexing — 1 week\n4️⃣ Practice: HackerRank SQL, LeetCode DB\n\n💼 Har interview me SQL pucha jata hai — must hai!"},
+{k:["placement","job","interview","resume"],r:"💼 **Placement Prep:**\n\n1️⃣ DSA strong karo (150+ problems)\n2️⃣ 2 solid projects (GitHub pe)\n3️⃣ Resume 1-page, ATS-friendly\n4️⃣ Mock interviews do (doston ke saath)\n5️⃣ TCS NQT, AMCAT, Cocubes ke liye apply karo\n\n🎓 Community me mentors se 1:1 session book karo — free hai!"},
+{k:["course","kaunsa","konsa","kya seekhu","roadmap"],r:"🎯 **Konsa course karu?**\n\n• **Job jaldi chahiye:** Web Dev (MERN) ya Java + Spring Boot\n• **Data me interest:** Python + SQL + Power BI\n• **Strong foundation:** DSA (har role me kaam ayega!)\n\nMujhe specific pucho — jaise 'Java roadmap' ya 'DSA kaise seekhu' 😊"},
+{k:["hello","hi","hey","namaste","hii"],r:"Namaste! 🙏 Main tumhara AI Course Counsellor hu!\n\nMujhse pucho:\n• Java/Python roadmap\n• DSA kaise seekhu\n• Web dev kaise start karu\n• Placement prep tips\n\nKya jan na chahte ho? 😊"},
+{k:["thank","shukriya","dhanyavad"],r:"Koi baat nahi! 😊 All the best tumhari learning journey ke liye! 🚀\n\nAur kuch puchna ho toh main yahin hu! 💜"}];
+const AI_DEFAULT="Hmm, ispe mujhe pura sure nahi hai 🤔\n\nPar try karo:\n• 'Java roadmap' • 'Python kaise seekhu'\n• 'DSA tips' • 'Web dev roadmap'\n• 'Placement prep'\n\nYa community wall pe post karo — seniors help karenge! 💜";
+const AI_CHIPS=["Java roadmap","Python kaise seekhu?","DSA tips","Web dev roadmap","Placement prep"];
+let aiOpened=false;
+function toggleAI(){const w=document.getElementById('ai-win');w.classList.toggle('open');if(w.classList.contains('open')&&!aiOpened){aiOpened=true;aiSay("Namaste! 🙏 Main **NaukriGPT AI Counsellor** hu!\n\nCourse, roadmap, placement — kuch bhi pucho! Neeche chips pe click karo ya khud likho 😊");renderChips();}}
+function renderChips(){document.getElementById('ai-chips').innerHTML=AI_CHIPS.map(c=>'<button class="ai-chip" onclick="aiAsk(this.innerText)">'+c+'</button>').join('');}
+function aiSay(t){const m=document.getElementById('ai-msgs');const d=document.createElement('div');d.className='ai-m ai-bot';d.innerText=t;m.appendChild(d);m.scrollTop=m.scrollHeight;}
+function aiAsk(t){const m=document.getElementById('ai-msgs');const d=document.createElement('div');d.className='ai-m ai-user';d.innerText=t;m.appendChild(d);m.scrollTop=m.scrollHeight;const ty=document.createElement('div');ty.className='ai-typing';ty.innerText='AI soch raha hai...';m.appendChild(ty);m.scrollTop=m.scrollHeight;
+/* Pehle backend (/api/chat -> Gemini) try karo, fail ho to local knowledge base */
+fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:t})})
+.then(r=>r.json())
+.then(data=>{ty.remove();aiSay(data.reply||aiReply(t));})
+.catch(()=>{setTimeout(()=>{ty.remove();aiSay(aiReply(t));},700);});}
+function aiReply(q){q=q.toLowerCase();for(const e of AI_KB){for(const k of e.k){if(q.includes(k))return e.r;}}return AI_DEFAULT;}
+function sendAI(){const i=document.getElementById('ai-text');const t=i.value.trim();if(!t)return;i.value='';aiAsk(t);}
+</script>
+<script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body>
 </html>
