@@ -1,6 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head><style>
+@font-face {
+  font-family: "Optimistic";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/OptimisticAI_VF_Optimized.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Optimistic Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/OptimisticMono_W_TextRegular.woff2") format("woff2");
+}
+:where(html) {
+  font-family: "Optimistic", system-ui, sans-serif;
+}
+:where(code, pre, kbd, samp) {
+  font-family: "Optimistic Mono", ui-monospace, monospace;
+}
+</style>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NaukriGPT Community - Mentorship & Networking</title>
@@ -136,6 +157,9 @@ let posts=[
 {a:"Simran Kaur",m:"BCA 1st Year • Chandigarh University",t:"5h ago",x:"Doubt hai yaar... Python me decorators samajh nahi aa rahe. Koi simple real-life example se explain kar sakta hai? Please help karo!",l:23,c:18},
 {a:"Aditya Nair",m:"BCA 3rd Year • Christ University",t:"1d ago",x:"Referral chahiye! TCS NQT clear ho gaya hai, ab interview round ke liye prepare kar raha hoon. Koi senior tips de sakta hai?",l:61,c:25},
 {a:"Kavya Menon",m:"BCA 2nd Year • Amity University",t:"2d ago",x:"Hackathon jeet liya team ke saath! 48 hours me ek AI chatbot banaya. Mentors ki guidance ka result hai. Thank you NaukriGPT community!",l:89,c:31}];
+/* === localStorage fix: posts refresh ke baad bhi save rahenge === */
+try{const _sp=JSON.parse(localStorage.getItem('naukrigpt_posts'));if(Array.isArray(_sp)&&_sp.length)posts=_sp;}catch(e){}
+function savePosts(){try{localStorage.setItem('naukrigpt_posts',JSON.stringify(posts));localStorage.setItem('naukrigpt_liked',JSON.stringify([...liked]));}catch(e){}}
 const buddies=[
 {n:"Ishan Kapoor",a:"🧑‍💻",m:"BCA 2nd Year • LPU",s:["React","JavaScript","Tailwind"],p:92,v:"Building MERN projects"},
 {n:"Tanvi Desai",a:"👩‍💻",m:"BCA 1st Year • Mumbai University",s:["Python","Flask","SQL"],p:87,v:"Prepping for hackathons"},
@@ -144,12 +168,13 @@ const buddies=[
 const filters=["All","React","Python","Java","DSA"];
 const days=["Today","Tomorrow","This Weekend"],slots=["10:00 AM","12:00 PM","4:00 PM","6:00 PM"];
 let liked=new Set(),activeFilter="All",selDay=0,selSlot=0,bookMentor=null;
+try{const _sl=JSON.parse(localStorage.getItem('naukrigpt_liked'));if(Array.isArray(_sl))liked=new Set(_sl);}catch(e){}
 document.getElementById('mentors').innerHTML=mentors.map((m,i)=>'<div class="card"><div class="mtop"><div class="avatar">'+m.a+'</div><div><div class="mname">'+m.n+'</div><div class="mrole">💼 '+m.r+' @ '+m.c+'</div><div class="mses">'+m.t+'</div></div></div><div class="tags">'+m.s.map(s=>'<span class="tag">'+s+'</span>').join('')+'</div><div class="btns"><a class="btn btn-li" href="https://www.linkedin.com" target="_blank">LinkedIn</a><button class="btn btn-book" onclick="openBook('+i+')">📅 Book 1:1</button></div></div>').join('');
 function renderFeed(){document.getElementById('feed').innerHTML=posts.map((p,i)=>'<div class="post"><div class="phead"><div class="pav">'+(p.a==="You"?"😎":"🎓")+'</div><div><div class="pname">'+p.a+'</div><div class="pmeta">📍 '+p.m+' • 🕐 '+p.t+'</div></div></div><div class="ptext">'+p.x+'</div><div class="pfoot"><span class="like '+(liked.has(i)?'liked':'')+'" onclick="toggleLike('+i+')">'+(liked.has(i)?'💖':'🤍')+' '+p.l+'</span><span>💬 '+p.c+' comments</span></div></div>').join('');}
-function toggleLike(i){if(liked.has(i)){liked.delete(i);posts[i].l--;}else{liked.add(i);posts[i].l++;}renderFeed();}
+function toggleLike(i){if(liked.has(i)){liked.delete(i);posts[i].l--;}else{liked.add(i);posts[i].l++;}savePosts();renderFeed();}
 const draft=document.getElementById('draft'),postbtn=document.getElementById('postbtn');
 draft.addEventListener('input',function(){postbtn.disabled=!draft.value.trim();});
-function publishPost(){const t=draft.value.trim();if(!t)return;posts.unshift({a:"You",m:"BCA Student • NaukriGPT Member",t:"Just now",x:t.replace(/</g,"&lt;"),l:0,c:0});draft.value="";postbtn.disabled=true;renderFeed();}
+function publishPost(){const t=draft.value.trim();if(!t)return;liked=new Set([...liked].map(i=>i+1));posts.unshift({a:"You",m:"BCA Student • NaukriGPT Member",t:"Just now",x:t.replace(/</g,"&lt;"),l:0,c:0});savePosts();draft.value="";postbtn.disabled=true;renderFeed();}
 renderFeed();
 document.getElementById('chips').innerHTML=filters.map((f,i)=>'<button class="chip '+(i===0?'on':'')+'" onclick="setFilter(\''+f+'\',this)">'+f+'</button>').join('');
 function renderBuddies(){const list=activeFilter==="All"?buddies:buddies.filter(b=>b.s.indexOf(activeFilter)>=0);document.getElementById('buddies').innerHTML=list.map(b=>'<div class="card"><div class="buddy"><div class="mtop"><div class="avatar">'+b.a+'</div><div><div class="mname">'+b.n+'</div><div class="mrole">'+b.m+'</div><div class="vibe">"'+b.v+'"</div></div></div><div class="match"><b>'+b.p+'%</b><br><span>Match</span></div></div><div class="tags">'+b.s.map(s=>'<span class="tag blue">'+s+'</span>').join('')+'</div></div>').join('')||'<p style="color:#64748b;text-align:center">Is skill ke liye abhi koi buddy nahi mila!</p>';}
@@ -161,5 +186,5 @@ function renderModal(){const m=bookMentor;let dh='',sh='';for(let i=0;i<days.len
 function confirmBook(){const m=bookMentor;document.getElementById('modalBody').innerHTML='<div class="success"><div class="tick">✅</div><h3 style="margin-top:10px">Booking Confirmed! 🎉</h3><p style="color:#cbd5e1;margin-top:10px;font-size:14px">'+m.n+' ke saath session <b>'+days[selDay]+', '+slots[selSlot]+'</b> par book ho gaya hai.</p><p style="color:#64748b;font-size:12px;margin-top:6px">Calendar invite aur Meet link jald bheja jayega.</p><button class="confirm" onclick="closeModal()">Done</button></div>';}
 document.getElementById('modal').addEventListener('click',function(e){if(e.target.id==='modal')closeModal();});
 </script>
-</body>
+<script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body>
 </html>
