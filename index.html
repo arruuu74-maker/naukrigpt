@@ -1,42 +1,126 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>NaukriGPT - AI for BCA</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NaukriGPT - AI Career Counsellor for Students</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui;background:#0a0a0a;color:#fff;min-height:100vh}
-.top{display:flex;justify-content:space-between;padding:18px;max-width:1100px;margin:auto}
-.logo{font-weight:800;font-size:22px}.logo span{color:#6366f1}
-.hero{text-align:center;padding:20px}.badge{background:#1e1e1e;border:1px solid #333;padding:6px 14px;border-radius:20px;font-size:13px}
-h1{font-size:30px;margin:12px 0}h1 span{color:#6366f1}
-.box{max-width:780px;margin:auto;padding:16px}
-#msgs{height:58vh;overflow:auto;display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
-.m{padding:12px 16px;border-radius:14px;max-width:85%;font-size:14.5px;line-height:1.5}
-.u{background:#fff;color:#000;align-self:flex-end}.b{background:#1e1e1e;border:1px solid #2a2a2a;align-self:flex-start}
-.row{display:flex;gap:8px;background:#1e1e1e;border:1px solid #333;border-radius:12px;padding:6px}
-.row input{flex:1;background:transparent;border:0;color:#fff;outline:0;padding:8px;font-size:16px}
-.row button{background:#fff;color:#000;border:0;padding:10px 18px;border-radius:8px;font-weight:700}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a18;color:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh}
+.wrap{max-width:1000px;margin:0 auto;padding:0 16px 60px}
+.hero{text-align:center;padding:70px 0 30px}
+.badge{display:inline-block;border:1px solid rgba(168,85,247,.4);background:rgba(168,85,247,.1);color:#d8b4fe;border-radius:999px;padding:6px 16px;font-size:13px}
+h1{font-size:clamp(36px,7vw,60px);font-weight:800;margin-top:16px;line-height:1.15}
+h1 .grad{background:linear-gradient(90deg,#c084fc,#f0abfc,#60a5fa);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:#cbd5e1;margin-top:12px;font-size:17px;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.6}
+.cta-row{display:flex;gap:12px;justify-content:center;margin-top:28px;flex-wrap:wrap}
+.btn{border-radius:12px;padding:14px 32px;font-size:16px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
+.btn-main{border:none;background:linear-gradient(90deg,#8b5cf6,#2563eb);color:#fff}
+.btn-ghost{border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:#e2e8f0}
+.stats{display:flex;gap:10px;justify-content:center;margin-top:32px;flex-wrap:wrap}
+.stat{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);border-radius:12px;padding:10px 20px;font-size:14px;color:#cbd5e1}
+.stat b{color:#fff;font-size:18px}
+section{margin-top:56px}
+.sec-head{text-align:center;margin-bottom:8px}
+.sec-head h2{font-size:28px}
+.sec-head p{color:#94a3b8;font-size:14px;margin-top:6px}
+.grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:24px}
+@media(min-width:640px){.grid{grid-template-columns:1fr 1fr}}
+.card{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);border-radius:16px;padding:22px}
+.card:hover{border-color:rgba(168,85,247,.4)}
+.icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:14px}
+.card h3{font-size:18px;margin-bottom:8px}
+.card p{color:#94a3b8;font-size:14px;line-height:1.6}
+.card a{color:#a78bfa;font-size:14px;text-decoration:none;font-weight:600;display:inline-block;margin-top:12px}
+.steps{display:grid;grid-template-columns:1fr;gap:14px;margin-top:24px}
+@media(min-width:640px){.steps{grid-template-columns:1fr 1fr 1fr}}
+.step{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);border-radius:16px;padding:22px;text-align:center}
+.step .num{width:40px;height:40px;border-radius:50%;background:linear-gradient(90deg,#8b5cf6,#2563eb);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;margin:0 auto 12px}
+.step h3{font-size:16px;margin-bottom:6px}
+.step p{color:#94a3b8;font-size:13px;line-height:1.5}
+.cta-box{margin-top:56px;border:1px solid rgba(168,85,247,.3);background:linear-gradient(135deg,rgba(139,92,246,.12),rgba(37,99,235,.12));border-radius:20px;padding:40px 24px;text-align:center}
+.cta-box h2{font-size:26px;margin-bottom:10px}
+.cta-box p{color:#cbd5e1;font-size:15px;margin-bottom:22px}
+footer{text-align:center;margin-top:50px;color:#64748b;font-size:12px}
 </style>
 </head>
 <body>
-<div class="top"><div class="logo">Naukri<span>GPT</span></div><div><a href="/community.html" style="color:#a78bfa;text-decoration:none;font-weight:600;margin-right:12px">Community</a><span style="color:#666">BCA</span></div></div>
-<div class="hero"><div class="badge">🔥 LIVE - arruuu74</div><h1>Ask Anything About <span>BCA Career</span></h1></div>
-<div class="box">
-<div id="msgs"><div class="m b">Hi Chiraag! 👋 Main NaukriGPT hu. Resume, Interview, Roadmap - kuch bhi puch lo!</div></div>
-<div class="row"><input id="inp" placeholder="e.g. BCA ke baad best course?"><button onclick="send()">Send</button></div>
+<div class="wrap">
+<div class="hero">
+<div class="badge">✨ AI-Powered Career Guidance</div>
+<h1>Confused About Your <span class="grad">Career?</span><br>NaukriGPT Has Answers.</h1>
+<p class="sub">BCA students ke liye AI career counsellor + mentorship community. Skills seekho, mentors se connect karo, aur apne dream job ki taraf badho.</p>
+<div class="cta-row">
+<a class="btn btn-main" href="/community.html">🚀 Join Community</a>
+<a class="btn btn-ghost" href="/community.html#mentors">🎓 Find Mentors</a>
 </div>
-<script>
-async function send(){
-let inp=document.getElementById('inp'),txt=inp.value.trim();if(!txt)return;
-let box=document.getElementById('msgs');box.innerHTML+=`<div class="m u">${txt}</div>`;inp.value='';box.scrollTop=box.scrollHeight;
-box.innerHTML+=`<div class="m b" id="t">Typing...</div>`;
-try{
-let r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:txt})});
-let d=await r.json();document.getElementById('t').remove();box.innerHTML+=`<div class="m b">${d.reply}</div>`;
-}catch(e){document.getElementById('t').innerText='Error: Vercel me API Key check karo';}
-box.scrollTop=box.scrollHeight;
-}
-document.getElementById('inp').addEventListener('keydown',e=>{if(e.key==='Enter')send()});
-</script>
+<div class="stats">
+<div class="stat"><b>6</b><br>Expert Mentors</div>
+<div class="stat"><b>12k+</b><br>Students</div>
+<div class="stat"><b>500+</b><br>1:1 Sessions</div>
+<div class="stat"><b>100%</b><br>Free</div>
+</div>
+</div>
+<section>
+<div class="sec-head">
+<h2>💜 Kya Milega Tumhe?</h2>
+<p>Career growth ke liye sab kuch, ek hi jagah</p>
+</div>
+<div class="grid">
+<div class="card">
+<div class="icon" style="background:linear-gradient(135deg,#8b5cf6,#2563eb)">🤖</div>
+<h3>AI Career Counsellor</h3>
+<p>Apne skills, interests aur goals batao - AI tumhare liye personalized career roadmap banayega. Konsa course, konsa project, kab apply karna - sab clear.</p>
+</div>
+<div class="card">
+<div class="icon" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">🎓</div>
+<h3>1:1 Mentorship</h3>
+<p>TCS, Flipkart, Zomato jaise companies ke professionals se free 30-min sessions book karo. Real industry guidance, real growth.</p>
+<a href="/community.html">Book a session →</a>
+</div>
+<div class="card">
+<div class="icon" style="background:linear-gradient(135deg,#8b5cf6,#ec4899)">💬</div>
+<h3>Community Wall</h3>
+<p>Projects showcase karo, doubts pucho, referrals mango. 12,000+ students ka active network tumhara wait kar raha hai.</p>
+<a href="/community.html">Start posting →</a>
+</div>
+<div class="card">
+<div class="icon" style="background:linear-gradient(135deg,#3b82f6,#06b6d4)">⚡</div>
+<h3>Buddy Finder</h3>
+<p>Same skills wale doston se connect karo. Saath me hackathons jeeto, DSA practice karo, placements crack karo.</p>
+<a href="/community.html">Find your buddy →</a>
+</div>
+</div>
+</section>
+<section>
+<div class="sec-head">
+<h2>🚀 Kaise Shuru Karein?</h2>
+<p>Sirf 3 steps me apni career journey shuru karo</p>
+</div>
+<div class="steps">
+<div class="step">
+<div class="num">1</div>
+<h3>Join Karo</h3>
+<p>Community me free me sign up karo - koi fees nahi, koi catch nahi.</p>
+</div>
+<div class="step">
+<div class="num">2</div>
+<h3>Connect Karo</h3>
+<p>Mentors book karo, buddies dhoondo, wall pe apna pehla post dalo.</p>
+</div>
+<div class="step">
+<div class="num">3</div>
+<h3>Grow Karo</h3>
+<p>Guidance follow karo, projects banao, placements crack karo. 💪</p>
+</div>
+</div>
+</section>
+<div class="cta-box">
+<h2>🎯 Ready Ho Apni Dream Job Ke Liye?</h2>
+<p>12,000+ students already jud chuke hai. Tum kab aa rahe ho?</p>
+<a class="btn btn-main" href="/community.html">Join NaukriGPT Community 💜</a>
+</div>
+<footer><b style="color:#c084fc">NaukriGPT</b> — Learn Together, Grow Together 💜<br><br>Made with ❤️ for BCA students across India</footer>
+</div>
 </body>
 </html>
