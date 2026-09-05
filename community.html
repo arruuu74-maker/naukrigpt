@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NaukriGPT Community - Mentorship & Networking</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a18;color:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh}
+.wrap{max-width:1000px;margin:0 auto;padding:0 16px 60px}
+header{text-align:center;padding:40px 0 10px}
+.badge{display:inline-block;border:1px solid rgba(168,85,247,.4);background:rgba(168,85,247,.1);color:#d8b4fe;border-radius:999px;padding:6px 16px;font-size:13px}
+h1{font-size:clamp(32px,6vw,52px);font-weight:800;margin-top:14px}
+h1 .grad{background:linear-gradient(90deg,#c084fc,#f0abfc,#60a5fa);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:#cbd5e1;margin-top:8px;font-size:16px}
+.stats{display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+.stat{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);border-radius:12px;padding:8px 16px;font-size:14px;color:#cbd5e1}
+.stat b{color:#fff}
+section{margin-top:48px}
+.sec-head{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.sec-head h2{font-size:24px}
+.sec-head p{color:#94a3b8;font-size:13px}
+.grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:18px}
+@media(min-width:640px){.grid{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr 1fr 1fr}}
+.card{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);border-radius:16px;padding:18px}
+.card:hover{border-color:rgba(168,85,247,.4)}
+.mtop{display:flex;gap:12px;align-items:center}
+.avatar{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,rgba(168,85,247,.3),rgba(59,130,246,.3));border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.mname{font-weight:600}
+.mrole{color:#cbd5e1;font-size:13px}
+.mses{color:#64748b;font-size:12px;margin-top:2px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.tag{background:rgba(168,85,247,.15);border:1px solid rgba(168,85,247,.3);color:#d8b4fe;border-radius:999px;padding:4px 10px;font-size:12px}
+.tag.blue{background:rgba(59,130,246,.15);border-color:rgba(59,130,246,.3);color:#bfdbfe}
+.btns{display:flex;gap:8px;margin-top:14px}
+.btn{flex:1;border-radius:10px;padding:10px;font-size:14px;font-weight:600;cursor:pointer;text-align:center;text-decoration:none;display:block}
+.btn-li{border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:#e2e8f0}
+.btn-book{border:none;background:linear-gradient(90deg,#8b5cf6,#2563eb);color:#fff}
+.composer{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);border-radius:16px;padding:16px;margin-top:18px}
+textarea{width:100%;background:#0d0d20;border:1px solid rgba(255,255,255,.1);border-radius:10px;color:#fff;padding:12px;font-size:14px;resize:none;font-family:inherit}
+textarea:focus{outline:none;border-color:rgba(168,85,247,.6)}
+.postbtn{background:linear-gradient(90deg,#8b5cf6,#2563eb);border:none;color:#fff;border-radius:10px;padding:10px 22px;font-weight:600;font-size:14px;cursor:pointer;float:right;margin-top:10px}
+.postbtn:disabled{opacity:.4}
+.clear{clear:both}
+.post{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);border-radius:16px;padding:16px;margin-top:12px}
+.phead{display:flex;gap:10px;align-items:center}
+.pav{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,rgba(168,85,247,.4),rgba(59,130,246,.4));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.pname{font-weight:600;font-size:14px}
+.pmeta{color:#64748b;font-size:12px}
+.ptext{margin-top:10px;font-size:14px;line-height:1.6;color:#e2e8f0}
+.pfoot{margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06);display:flex;gap:18px;font-size:14px;color:#94a3b8}
+.like{cursor:pointer;user-select:none}
+.like.liked{color:#f472b6}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.chip{border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:#cbd5e1;border-radius:999px;padding:8px 16px;font-size:14px;cursor:pointer}
+.chip.on{background:linear-gradient(90deg,#8b5cf6,#2563eb);color:#fff;border-color:transparent}
+.buddy{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.match{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,247,.3);border-radius:10px;padding:6px 12px;text-align:center;flex-shrink:0}
+.match b{color:#6ee7b7;font-size:18px}
+.match span{font-size:10px;color:#6ee7b7;text-transform:uppercase}
+.vibe{color:#64748b;font-size:12px;font-style:italic;margin-top:4px}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+.modal-bg.open{display:flex}
+.modal{background:#12122a;border:1px solid rgba(168,85,247,.3);border-radius:16px;padding:24px;max-width:400px;width:100%}
+.opt{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.opt button{flex:1;min-width:70px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:#cbd5e1;border-radius:10px;padding:10px 6px;font-size:13px;cursor:pointer}
+.opt button.on{background:linear-gradient(90deg,#8b5cf6,#2563eb);color:#fff;border-color:transparent}
+.mlabel{font-size:14px;color:#cbd5e1;margin-top:14px;font-weight:500}
+.confirm{width:100%;margin-top:20px;background:linear-gradient(90deg,#8b5cf6,#2563eb);border:none;color:#fff;border-radius:10px;padding:12px;font-size:15px;font-weight:600;cursor:pointer}
+.success{text-align:center;padding:20px 0}
+.success .tick{font-size:52px}
+footer{text-align:center;margin-top:50px;color:#64748b;font-size:12px}
+.close{float:right;background:none;border:none;color:#94a3b8;font-size:20px;cursor:pointer}
+.back{display:inline-block;margin-top:24px;color:#a78bfa;text-decoration:none;font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="/index.html">&#8592; Back to Home</a>
+<header>
+<div class="badge">✨ AI Career Counsellor Community</div>
+<h1><span class="grad">NaukriGPT</span> Community</h1>
+<p class="sub">Learn Together, <b style="color:#d8b4fe">Grow Together</b></p>
+<div class="stats">
+<div class="stat">🎓 <b>6</b> Mentors</div>
+<div class="stat">👥 <b>12k+</b> Students</div>
+<div class="stat">💬 <b>500+</b> Sessions</div>
+</div>
+</header>
+<section>
+<div class="sec-head">
+<div class="icon" style="background:linear-gradient(135deg,#8b5cf6,#2563eb)">🎓</div>
+<div><h2>Mentorship Hub</h2><p>Industry experts se 1:1 guidance lo</p></div>
+</div>
+<div class="grid grid3" id="mentors"></div>
+</section>
+<section>
+<div class="sec-head">
+<div class="icon" style="background:linear-gradient(135deg,#d946ef,#8b5cf6)">👥</div>
+<div><h2>Networking Zone</h2><p>Community wall — apne thoughts share karo</p></div>
+</div>
+<div class="composer">
+<textarea id="draft" rows="3" placeholder="Kya chal raha hai? Project showcase, doubt, ya referral — sab share karo..."></textarea>
+<button class="postbtn" id="postbtn" onclick="publishPost()" disabled>Post &#10148;</button>
+<div class="clear"></div>
+</div>
+<div id="feed"></div>
+</section>
+<section>
+<div class="sec-head">
+<div class="icon" style="background:linear-gradient(135deg,#3b82f6,#06b6d4)">⚡</div>
+<div><h2>Find Your Buddy</h2><p>Same skills wale doston se connect karo</p></div>
+</div>
+<div class="chips" id="chips"></div>
+<div class="grid" id="buddies" style="margin-top:14px"></div>
+</section>
+<footer><b style="color:#c084fc">NaukriGPT</b> — Learn Together, Grow Together 💜</footer>
+</div>
+<div class="modal-bg" id="modal">
+<div class="modal">
+<button class="close" onclick="closeModal()">&#10005;</button>
+<div id="modalBody"></div>
+</div>
+</div>
+<script>
+const mentors=[
+{n:"Arjun Mehta",r:"Senior SDE",c:"TCS",a:"🧑‍💻",s:["Java","Spring Boot","DSA"],t:"120+ sessions"},
+{n:"Priya Sharma",r:"Frontend Developer",c:"Flipkart",a:"👩‍💻",s:["React","TypeScript","Tailwind"],t:"95+ sessions"},
+{n:"Rahul Verma",r:"Backend Intern",c:"Zomato",a:"🧑‍🎓",s:["Python","Django","PostgreSQL"],t:"60+ sessions"},
+{n:"Sneha Iyer",r:"Data Analyst",c:"Infosys",a:"👩‍💼",s:["Python","SQL","Power BI"],t:"80+ sessions"},
+{n:"Vikram Singh",r:"DevOps Engineer",c:"Razorpay",a:"🧑‍🔧",s:["AWS","Docker","Kubernetes"],t:"70+ sessions"},
+{n:"Ananya Reddy",r:"ML Engineer",c:"CRED",a:"👩‍🔬",s:["Python","TensorFlow","MLOps"],t:"55+ sessions"}];
+let posts=[
+{a:"Rohit Yadav",m:"BCA 2nd Year • Delhi University",t:"2h ago",x:"Guys, maine apna pehla MERN stack project complete kiya! Full-stack notes app banayi hai with authentication aur dark mode. Feedback do please! #mern #webdev",l:47,c:12},
+{a:"Simran Kaur",m:"BCA 1st Year • Chandigarh University",t:"5h ago",x:"Doubt hai yaar... Python me decorators samajh nahi aa rahe. Koi simple real-life example se explain kar sakta hai? Please help karo!",l:23,c:18},
+{a:"Aditya Nair",m:"BCA 3rd Year • Christ University",t:"1d ago",x:"Referral chahiye! TCS NQT clear ho gaya hai, ab interview round ke liye prepare kar raha hoon. Koi senior tips de sakta hai?",l:61,c:25},
+{a:"Kavya Menon",m:"BCA 2nd Year • Amity University",t:"2d ago",x:"Hackathon jeet liya team ke saath! 48 hours me ek AI chatbot banaya. Mentors ki guidance ka result hai. Thank you NaukriGPT community!",l:89,c:31}];
+const buddies=[
+{n:"Ishan Kapoor",a:"🧑‍💻",m:"BCA 2nd Year • LPU",s:["React","JavaScript","Tailwind"],p:92,v:"Building MERN projects"},
+{n:"Tanvi Desai",a:"👩‍💻",m:"BCA 1st Year • Mumbai University",s:["Python","Flask","SQL"],p:87,v:"Prepping for hackathons"},
+{n:"Arnav Joshi",a:"🧑‍🎓",m:"BCA 3rd Year • Pune University",s:["Java","Spring","DSA"],p:85,v:"Cracking placements"},
+{n:"Pooja Rani",a:"👩‍🎓",m:"BCA 2nd Year • IGNOU",s:["Python","DSA","React"],p:78,v:"Learning DSA daily"}];
+const filters=["All","React","Python","Java","DSA"];
+const days=["Today","Tomorrow","This Weekend"],slots=["10:00 AM","12:00 PM","4:00 PM","6:00 PM"];
+let liked=new Set(),activeFilter="All",selDay=0,selSlot=0,bookMentor=null;
+document.getElementById('mentors').innerHTML=mentors.map((m,i)=>'<div class="card"><div class="mtop"><div class="avatar">'+m.a+'</div><div><div class="mname">'+m.n+'</div><div class="mrole">💼 '+m.r+' @ '+m.c+'</div><div class="mses">'+m.t+'</div></div></div><div class="tags">'+m.s.map(s=>'<span class="tag">'+s+'</span>').join('')+'</div><div class="btns"><a class="btn btn-li" href="https://www.linkedin.com" target="_blank">LinkedIn</a><button class="btn btn-book" onclick="openBook('+i+')">📅 Book 1:1</button></div></div>').join('');
+function renderFeed(){document.getElementById('feed').innerHTML=posts.map((p,i)=>'<div class="post"><div class="phead"><div class="pav">'+(p.a==="You"?"😎":"🎓")+'</div><div><div class="pname">'+p.a+'</div><div class="pmeta">📍 '+p.m+' • 🕐 '+p.t+'</div></div></div><div class="ptext">'+p.x+'</div><div class="pfoot"><span class="like '+(liked.has(i)?'liked':'')+'" onclick="toggleLike('+i+')">'+(liked.has(i)?'💖':'🤍')+' '+p.l+'</span><span>💬 '+p.c+' comments</span></div></div>').join('');}
+function toggleLike(i){if(liked.has(i)){liked.delete(i);posts[i].l--;}else{liked.add(i);posts[i].l++;}renderFeed();}
+const draft=document.getElementById('draft'),postbtn=document.getElementById('postbtn');
+draft.addEventListener('input',function(){postbtn.disabled=!draft.value.trim();});
+function publishPost(){const t=draft.value.trim();if(!t)return;posts.unshift({a:"You",m:"BCA Student • NaukriGPT Member",t:"Just now",x:t.replace(/</g,"&lt;"),l:0,c:0});draft.value="";postbtn.disabled=true;renderFeed();}
+renderFeed();
+document.getElementById('chips').innerHTML=filters.map((f,i)=>'<button class="chip '+(i===0?'on':'')+'" onclick="setFilter(\''+f+'\',this)">'+f+'</button>').join('');
+function renderBuddies(){const list=activeFilter==="All"?buddies:buddies.filter(b=>b.s.indexOf(activeFilter)>=0);document.getElementById('buddies').innerHTML=list.map(b=>'<div class="card"><div class="buddy"><div class="mtop"><div class="avatar">'+b.a+'</div><div><div class="mname">'+b.n+'</div><div class="mrole">'+b.m+'</div><div class="vibe">"'+b.v+'"</div></div></div><div class="match"><b>'+b.p+'%</b><br><span>Match</span></div></div><div class="tags">'+b.s.map(s=>'<span class="tag blue">'+s+'</span>').join('')+'</div></div>').join('')||'<p style="color:#64748b;text-align:center">Is skill ke liye abhi koi buddy nahi mila!</p>';}
+function setFilter(f,el){activeFilter=f;const cs=document.querySelectorAll('.chip');for(let k=0;k<cs.length;k++)cs[k].classList.remove('on');el.classList.add('on');renderBuddies();}
+renderBuddies();
+function openBook(i){bookMentor=mentors[i];selDay=0;selSlot=0;renderModal();document.getElementById('modal').classList.add('open');}
+function closeModal(){document.getElementById('modal').classList.remove('open');}
+function renderModal(){const m=bookMentor;let dh='',sh='';for(let i=0;i<days.length;i++)dh+='<button class="'+(i===selDay?'on':'')+'" onclick="selDay='+i+';renderModal()">'+days[i]+'</button>';for(let j=0;j<slots.length;j++)sh+='<button class="'+(j===selSlot?'on':'')+'" onclick="selSlot='+j+';renderModal()">'+slots[j]+'</button>';document.getElementById('modalBody').innerHTML='<div class="mtop"><div class="avatar">'+m.a+'</div><div><div class="mname" style="font-size:18px">'+m.n+'</div><div class="mrole">'+m.r+' @ '+m.c+'</div></div></div><p class="mlabel">Day chuno:</p><div class="opt">'+dh+'</div><p class="mlabel">Time slot chuno:</p><div class="opt">'+sh+'</div><button class="confirm" onclick="confirmBook()">📅 Confirm Booking</button><p style="text-align:center;color:#64748b;font-size:12px;margin-top:8px">Free 30-min 1:1 session • Google Meet link email par milega</p>';}
+function confirmBook(){const m=bookMentor;document.getElementById('modalBody').innerHTML='<div class="success"><div class="tick">✅</div><h3 style="margin-top:10px">Booking Confirmed! 🎉</h3><p style="color:#cbd5e1;margin-top:10px;font-size:14px">'+m.n+' ke saath session <b>'+days[selDay]+', '+slots[selSlot]+'</b> par book ho gaya hai.</p><p style="color:#64748b;font-size:12px;margin-top:6px">Calendar invite aur Meet link jald bheja jayega.</p><button class="confirm" onclick="closeModal()">Done</button></div>';}
+document.getElementById('modal').addEventListener('click',function(e){if(e.target.id==='modal')closeModal();});
+</script>
+</body>
+</html>
