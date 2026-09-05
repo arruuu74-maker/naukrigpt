@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><style>
+@font-face {
+  font-family: "Optimistic";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/OptimisticAI_VF_Optimized.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Optimistic Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/OptimisticMono_W_TextRegular.woff2") format("woff2");
+}
+:where(html) {
+  font-family: "Optimistic", system-ui, sans-serif;
+}
+:where(code, pre, kbd, samp) {
+  font-family: "Optimistic Mono", ui-monospace, monospace;
+}
+</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Resume Analyzer — NaukriGPT</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0f0a1e;color:#e9e4f5;min-height:100vh;padding:20px 14px}
+.wrap{max-width:760px;margin:0 auto}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.top a{color:#a78bfa;text-decoration:none;font-size:14px;font-weight:600}
+h1{font-size:26px;background:linear-gradient(90deg,#c084fc,#f0abfc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:#9a8fb8;font-size:14px;margin:6px 0 20px}
+.card{background:#1a1230;border:1px solid #2d1f4e;border-radius:14px;padding:20px;margin-bottom:16px}
+label{display:block;font-size:13px;font-weight:700;color:#c4b5fd;margin:0 0 8px;text-transform:uppercase;letter-spacing:.5px}
+textarea{width:100%;min-height:200px;background:#120c24;border:1px solid #3b2a63;border-radius:10px;color:#e9e4f5;padding:12px;font-size:14px;font-family:inherit;resize:vertical}
+textarea:focus{outline:none;border-color:#8b5cf6}
+select,input[type=text]{width:100%;background:#120c24;border:1px solid #3b2a63;border-radius:10px;color:#e9e4f5;padding:12px;font-size:14px;font-family:inherit}
+select:focus,input:focus{outline:none;border-color:#8b5cf6}
+.btn{width:100%;margin-top:14px;background:linear-gradient(90deg,#7c3aed,#a855f7);border:none;color:#fff;font-size:16px;font-weight:700;padding:14px;border-radius:12px;cursor:pointer}
+.btn:disabled{opacity:.5;cursor:wait}
+.hint{font-size:12px;color:#7a6a99;margin-top:8px;text-align:center}
+#result{display:none}
+/* score ring */
+.scorebox{display:flex;align-items:center;gap:18px;margin-bottom:16px}
+.ring{width:110px;height:110px;flex-shrink:0}
+.ring .bg{stroke:#2d1f4e}
+.ring .fg{stroke-linecap:round;transition:stroke-dashoffset 1s ease}
+.scorenum{font-size:30px;font-weight:800}
+.verdict{font-size:15px;color:#fde68a;line-height:1.5}
+.sec{margin-top:18px}
+.sec h3{font-size:14px;text-transform:uppercase;letter-spacing:1px;color:#a78bfa;margin-bottom:10px}
+.pill{display:inline-block;background:#2d1a5e;border:1px solid #6d28d9;color:#d8b4fe;border-radius:999px;padding:5px 14px;font-size:13px;font-weight:600;margin:0 6px 8px 0}
+.str{background:#12301f;border:1px solid #166534;color:#86efac}
+ul.fix{list-style:none}
+ul.fix li{background:#120c24;border:1px solid #3b2a63;border-radius:10px;padding:12px;margin-bottom:10px;font-size:14px}
+ul.fix li b{color:#f0abfc;display:block;margin-bottom:4px}
+ul.fix li span{color:#b8abd4}
+.err{background:#3b1020;border:1px solid #9f1239;color:#fda4af;border-radius:10px;padding:12px;font-size:14px;margin-top:12px}
+.spin{text-align:center;padding:30px;color:#a78bfa;font-size:15px}
+.spin .dot{display:inline-block;animation:blink 1.2s infinite}
+@keyframes blink{0%,100%{opacity:.2}50%{opacity:1}}
+@media(max-width:520px){h1{font-size:22px}.scorebox{flex-direction:column;text-align:center}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="top">
+<a href="/index.html">← Back to Home</a>
+<span style="font-size:13px;color:#7a6a99">NaukriGPT</span>
+</div>
+
+<h1>📄 AI Resume Analyzer</h1>
+<p class="sub">Apna resume paste kar, target role select kar — AI tera <b>ATS score</b>, missing keywords aur sudhaar ke points batayega.</p>
+
+<div class="card">
+<label for="resume">1. Apna resume yahan paste kar</label>
+<textarea id="resume" placeholder="Apna poora resume text yahan paste kar... (kam se kam 50 characters)"></textarea>
+</div>
+
+<div class="card">
+<label for="role">2. Target job role</label>
+<select id="role">
+<option value="Frontend Developer">Frontend Developer</option>
+<option value="Backend Developer">Backend Developer</option>
+<option value="Full Stack Developer">Full Stack Developer</option>
+<option value="Data Analyst">Data Analyst</option>
+<option value="UI/UX Designer">UI/UX Designer</option>
+<option value="Digital Marketing">Digital Marketing</option>
+<option value="General / Fresher">General / Fresher</option>
+</select>
+<button class="btn" id="go" onclick="analyze()">🔍 Analyze My Resume</button>
+<p class="hint">Powered by Gemini AI · Tera data kahin save nahi hota</p>
+</div>
+
+<div class="card" id="result"></div>
+
+</div>
+
+<script>
+async function analyze(){
+  const resume=document.getElementById('resume').value.trim();
+  const role=document.getElementById('role').value;
+  const box=document.getElementById('result');
+  const btn=document.getElementById('go');
+  if(resume.length<50){box.style.display='block';box.innerHTML='<div class="err">⚠️ Bhai, resume text bahut chhota hai. Poora resume paste kar (kam se kam 50 characters).</div>';return;}
+  btn.disabled=true;btn.textContent='⏳ Analyzing...';
+  box.style.display='block';
+  box.innerHTML='<div class="spin"><span class="dot">●</span> <span class="dot" style="animation-delay:.2s">●</span> <span class="dot" style="animation-delay:.4s">●</span><br><br>AI tera resume padh raha hai...</div>';
+  try{
+    const r=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({resumeText:resume,targetRole:role})});
+    const d=await r.json();
+    if(d.error) throw new Error(d.error);
+    render(d);
+  }catch(e){
+    box.innerHTML='<div class="err">❌ '+e.message+'</div>';
+  }
+  btn.disabled=false;btn.textContent='🔍 Analyze My Resume';
+}
+
+function ringColor(s){return s>=75?'#22c55e':s>=50?'#f59e0b':'#ef4444';}
+
+function render(d){
+  const s=d.atsScore||0, C=2*Math.PI*44, off=C-(C*s/100), col=ringColor(s);
+  let h='<div class="scorebox">'
+    +'<svg class="ring" viewBox="0 0 110 110"><circle class="bg" cx="55" cy="55" r="44" fill="none" stroke-width="10"/>'
+    +'<circle class="fg" cx="55" cy="55" r="44" fill="none" stroke="'+col+'" stroke-width="10" stroke-dasharray="'+C+'" stroke-dashoffset="'+off+'" transform="rotate(-90 55 55)"/>'
+    +'<text x="55" y="63" text-anchor="middle" fill="'+col+'" font-size="24" font-weight="800">'+s+'</text></svg>'
+    +'<div><div class="scorenum" style="color:'+col+'">ATS Score: '+s+'/100</div>'
+    +'<div class="verdict">'+(d.verdict||'')+'</div></div></div>';
+
+  if(d.strengths&&d.strengths.length){
+    h+='<div class="sec"><h3>💪 Teri Strengths</h3>'+d.strengths.map(x=>'<span class="pill str">'+x+'</span>').join('')+'</div>';
+  }
+  if(d.missingKeywords&&d.missingKeywords.length){
+    h+='<div class="sec"><h3>🔑 Missing Keywords (ATS ke liye zaroori)</h3>'+d.missingKeywords.map(x=>'<span class="pill">'+x+'</span>').join('')+'</div>';
+  }
+  if(d.improvements&&d.improvements.length){
+    h+='<div class="sec"><h3>🛠️ Sudhaar ke Points</h3><ul class="fix">'+d.improvements.map(x=>'<li><b>⚠️ '+x.issue+'</b><span>✅ '+x.fix+'</span></li>').join('')+'</ul></div>';
+  }
+  if(d.suggestedSkills&&d.suggestedSkills.length){
+    h+='<div class="sec"><h3>📚 Seekhne layak Skills</h3>'+d.suggestedSkills.map(x=>'<span class="pill">'+x+'</span>').join('')+'</div>';
+  }
+  document.getElementById('result').innerHTML=h;
+  document.getElementById('result').scrollIntoView({behavior:'smooth'});
+}
+</script>
+<script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body>
+</html>
