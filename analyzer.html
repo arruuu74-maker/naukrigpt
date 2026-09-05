@@ -79,6 +79,10 @@ ul.fix li span{color:#b8abd4}
 <div class="card">
 <label for="resume">1. Apna resume yahan paste kar</label>
 <textarea id="resume" placeholder="Apna poora resume text yahan paste kar... (kam se kam 50 characters)"></textarea>
+<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+<button onclick="fillSample()" style="background:#2d1a5e;border:1px solid #6d28d9;color:#d8b4fe;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer">📝 Sample resume bhar ke dekho</button>
+<button onclick="document.getElementById('resume').value=''" style="background:transparent;border:1px solid #3b2a63;color:#7a6a99;border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer">🗑️ Clear</button>
+</div>
 </div>
 
 <div class="card">
@@ -101,6 +105,31 @@ ul.fix li span{color:#b8abd4}
 </div>
 
 <script>
+function fillSample(){
+document.getElementById('resume').value =
+`Rahul Sharma
+Aspiring Frontend Developer | BCA Student
+Email: rahul.sharma@gmail.com | Phone: +91-9876543210
+GitHub: github.com/rahulsharma | Location: Bhubaneswar, India
+
+SUMMARY
+BCA final year student passionate about web development. Built 5+ projects using HTML, CSS and JavaScript.
+
+TECHNICAL SKILLS
+HTML5, CSS3, JavaScript, Responsive Design, Git, GitHub
+
+PROJECTS
+Portfolio Website - Personal project with HTML, CSS, JS. Deployed on Netlify.
+Todo App - Task manager with localStorage, filter and search features.
+
+EDUCATION
+BCA, Utkal University, Bhubaneswar (2023-2026)
+
+LANGUAGES
+English, Hindi, Odia`;
+document.getElementById('resume').scrollIntoView({behavior:'smooth',block:'center'});
+}
+
 async function analyze(){
   const resume=document.getElementById('resume').value.trim();
   const role=document.getElementById('role').value;
