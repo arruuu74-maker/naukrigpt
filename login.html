@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login — NaukriGPT</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a18;color:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.wrap{width:100%;max-width:420px}
+.back{display:inline-block;color:#a78bfa;text-decoration:none;font-size:14px;margin-bottom:20px}
+.card{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);border-radius:20px;padding:32px 28px}
+.logo{text-align:center;font-weight:800;font-size:26px;margin-bottom:6px}
+.logo span{background:linear-gradient(90deg,#c084fc,#60a5fa);-webkit-background-clip:text;background-clip:text;color:transparent}
+.tagline{text-align:center;color:#94a3b8;font-size:13px;margin-bottom:24px}
+.tabs{display:flex;background:rgba(255,255,255,.06);border-radius:12px;padding:4px;margin-bottom:22px}
+.tabs button{flex:1;border:none;background:transparent;color:#94a3b8;font-size:14px;font-weight:700;padding:10px;border-radius:9px;cursor:pointer}
+.tabs button.active{background:linear-gradient(90deg,#8b5cf6,#2563eb);color:#fff}
+label{display:block;font-size:12px;font-weight:700;color:#a78bfa;margin:0 0 6px;text-transform:uppercase;letter-spacing:.5px}
+input{width:100%;background:#0d0d20;border:1px solid rgba(255,255,255,.12);border-radius:10px;color:#fff;padding:12px;font-size:15px;margin-bottom:14px;font-family:inherit}
+input:focus{outline:none;border-color:#8b5cf6}
+.btn{width:100%;border:none;background:linear-gradient(90deg,#8b5cf6,#2563eb);color:#fff;font-size:16px;font-weight:800;padding:14px;border-radius:12px;cursor:pointer;margin-top:4px}
+.btn:disabled{opacity:.5;cursor:wait}
+.divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:#64748b;font-size:12px}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.1)}
+.gbtn{width:100%;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:#fff;font-size:15px;font-weight:700;padding:12px;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px}
+.gbtn:hover{background:rgba(255,255,255,.09)}
+.err{display:none;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.4);color:#fca5a5;border-radius:10px;padding:12px;font-size:13px;margin-bottom:14px;line-height:1.5}
+.perks{margin-top:22px;border-top:1px solid rgba(255,255,255,.08);padding-top:18px}
+.perks p{color:#94a3b8;font-size:13px;line-height:2}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="/index.html">← Back to Home</a>
+<div class="card">
+<div class="logo">Naukri<span>GPT</span></div>
+<p class="tagline">Login karo, career growth shuru karo 🚀</p>
+
+<div class="tabs">
+<button id="tabLogin" class="active" onclick="showTab('login')">Login</button>
+<button id="tabSignup" onclick="showTab('signup')">
