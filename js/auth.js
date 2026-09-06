@@ -13,7 +13,7 @@
 // ============================================================
 
 const ENFORCE_LIMITS = false; // Razorpay live hote hi true kar dena
-const FREE_SCANS = 3; // free users ke liye scans/month
+const FREE_SCANS = 3;         // free users ke liye scans/month
 
 const Auth = {
   user: null,
@@ -27,8 +27,8 @@ const Auth = {
     const css = `#authArea{display:inline-flex;align-items:center;margin-left:6px}
 .login-btn{background:linear-gradient(90deg,#8b5cf6,#2563eb);color:#fff!important;font-weight:700!important;font-size:13px!important;padding:8px 18px!important;border-radius:10px;text-decoration:none;white-space:nowrap}
 .user-chip{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:4px 12px 4px 4px;font-size:13px;color:#e2e8f0;white-space:nowrap}
-.user-chip.av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#2563eb);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff}
-.user-chip.pro{background:#f59e0b;color:#000;font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px}
+.user-chip .av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#2563eb);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff}
+.user-chip .pro{background:#f59e0b;color:#000;font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px}
 .user-chip button{background:transparent;border:none;color:#94a3b8;font-size:12px;cursor:pointer;padding:2px 4px}
 .user-chip button:hover{color:#fff}`;
     const st = document.createElement('style');
@@ -45,7 +45,7 @@ const Auth = {
     this.db = firebase.firestore();
     firebase.auth().onAuthStateChanged(async (u) => {
       this.user = u;
-      this.userData = u? await this.getUserDoc(u) : null;
+      this.userData = u ? await this.getUserDoc(u) : null;
       this.updateAuthArea();
       this._readyResolve(u);
     });
@@ -57,10 +57,10 @@ const Auth = {
     const snap = await ref.get();
     if (snap.exists) return snap.data();
     const data = {
-      name: u.displayName || (u.email? u.email.split('@')[0] : 'Student'),
+      name: u.displayName || (u.email ? u.email.split('@')[0] : 'Student'),
       email: u.email || '',
-      isPro: false, // Razorpay ke baad true hoga
-      scans: {}, // {"2026-9": 2}
+      isPro: false,          // Razorpay ke baad true hoga
+      scans: {},             // {"2026-9": 2}
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     };
     await ref.set(data);
@@ -84,7 +84,7 @@ const Auth = {
     if (!ENFORCE_LIMITS) return { allowed: true, pro: false, left: Infinity };
     const left = FREE_SCANS - this.scansUsed();
     return left > 0
-     ? { allowed: true, pro: false, left }
+      ? { allowed: true, pro: false, left }
       : { allowed: false, reason: 'limit' };
   },
 
@@ -133,7 +133,7 @@ const Auth = {
     }
     const name = (this.userData && this.userData.name) || 'Student';
     const initial = name.charAt(0).toUpperCase();
-    const proBadge = (this.userData && this.userData.isPro)? '<span class="pro">⚡PRO</span>' : '';
+    const proBadge = (this.userData && this.userData.isPro) ? '<span class="pro">⚡PRO</span>' : '';
     el.innerHTML = '<span class="user-chip"><span class="av">' + initial + '</span>' + name + proBadge
       + '<button onclick="Auth.logout()" title="Logout">Logout</button></span>';
   }
