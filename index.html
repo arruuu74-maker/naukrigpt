@@ -67,11 +67,11 @@ footer{text-align:center;margin-top:50px;color:#64748b;font-size:12px}
 </head>
 <body>
 <div class="wrap">
-<nav style="display:flex;align-items:center;justify-content:space-between;padding:14px 4px;position:sticky;top:0;z-index:50;background:rgba(10,10,24,.93);backdrop-filter:blur(10px)">
+<nav style="display:flex;align-items:center;justify-content:space-between;padding:14px 4px 0">
 <a href="/" style="font-weight:800;font-size:20px;color:#fff;text-decoration:none">Naukri<span style="color:#c084fc">GPT</span></a>
-<div style="display:flex;align-items:center;gap:12px">
-<a href="/pricing.html" style="color:#e2e8f0;font-size:14px;font-weight:600;text-decoration:none;white-space:nowrap">💰 Pricing</a>
-<span id="authArea"><a href="/login.html" style="background:linear-gradient(90deg,#8b5cf6,#2563eb);color:#fff;font-weight:700;font-size:13px;padding:8px 18px;border-radius:999px;text-decoration:none;white-space:nowrap">🔑 Login</a></span>
+<div style="display:flex;align-items:center;gap:16px">
+<a href="/pricing.html" style="color:#e2e8f0;font-size:14px;font-weight:600;text-decoration:none">💰 Pricing</a>
+<span id="authArea"></span>
 </div>
 </nav>
 
@@ -150,30 +150,6 @@ footer{text-align:center;margin-top:50px;color:#64748b;font-size:12px}
 </div>
 </div>
 </section>
-<!-- ===== Pricing Teaser ===== -->
-<div style="margin-top:56px;text-align:center">
-<div class="sec-head" style="margin-bottom:24px">
-<h2>💰 Simple Pricing</h2>
-<p>Free me shuru karo. Value dikhe to Pro lo.</p>
-</div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:560px;margin:0 auto;text-align:center">
-<div style="border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);border-radius:16px;padding:24px 12px">
-<div style="font-size:15px;font-weight:700;margin-bottom:6px">🆓 Free</div>
-<div style="font-size:32px;font-weight:800">₹0</div>
-<div style="color:#64748b;font-size:12px;margin:6px 0 14px">hamesha free</div>
-<div style="color:#cbd5e1;font-size:13px;line-height:1.9">5 AI chats/day<br>3 resume scans/month<br>Community access</div>
-</div>
-<div style="border:2px solid #8b5cf6;background:linear-gradient(135deg,rgba(139,92,246,.14),rgba(37,99,235,.10));border-radius:16px;padding:24px 12px;position:relative">
-<div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,#8b5cf6,#2563eb);font-size:11px;font-weight:800;padding:4px 12px;border-radius:999px;white-space:nowrap">🔥 POPULAR</div>
-<div style="font-size:15px;font-weight:700;margin-bottom:6px">⚡ Pro</div>
-<div style="font-size:32px;font-weight:800">₹199<small style="font-size:13px;color:#94a3b8;font-weight:400">/month</small></div>
-<div style="color:#64748b;font-size:12px;margin:6px 0 14px">cancel anytime</div>
-<div style="color:#cbd5e1;font-size:13px;line-height:1.9"><b>Unlimited</b> AI chats<br><b>Unlimited</b> resume scans<br>Interview prep kit</div>
-</div>
-</div>
-<a href="/pricing.html" class="btn btn-main" style="margin-top:22px">💰 See All Plans</a>
-</div>
-
 <div class="cta-box">
 <h2>🎯 Ready Ho Apni Dream Job Ke Liye?</h2>
 <p>12,000+ students already jud chuke hai. Tum kab aa rahe ho?</p>
@@ -216,6 +192,7 @@ footer{text-align:center;margin-top:50px;color:#64748b;font-size:12px}
 <div id="ai-chips"></div>
 <div id="ai-input">
 <input id="ai-text" placeholder="Apna sawal likho..." onkeypress="if(event.key==='Enter')sendAI()">
+<div data-pro-badge="chat" style="text-align:center;margin-top:8px;font-size:12px;color:#94a3b8"></div>
 <button id="ai-send" onclick="sendAI()">➤</button>
 </div>
 </div>
@@ -236,7 +213,7 @@ let aiOpened=false;
 function toggleAI(){const w=document.getElementById('ai-win');w.classList.toggle('open');if(w.classList.contains('open')&&!aiOpened){aiOpened=true;aiSay("Namaste! 🙏 Main **NaukriGPT AI Counsellor** hu!\n\nCourse, roadmap, placement — kuch bhi pucho! Neeche chips pe click karo ya khud likho 😊");renderChips();}}
 function renderChips(){document.getElementById('ai-chips').innerHTML=AI_CHIPS.map(c=>'<button class="ai-chip" onclick="aiAsk(this.innerText)">'+c+'</button>').join('');}
 function aiSay(t){const m=document.getElementById('ai-msgs');const d=document.createElement('div');d.className='ai-m ai-bot';d.innerText=t;m.appendChild(d);m.scrollTop=m.scrollHeight;}
-function aiAsk(t){const m=document.getElementById('ai-msgs');const d=document.createElement('div');d.className='ai-m ai-user';d.innerText=t;m.appendChild(d);m.scrollTop=m.scrollHeight;const ty=document.createElement('div');ty.className='ai-typing';ty.innerText='AI soch raha hai...';m.appendChild(ty);m.scrollTop=m.scrollHeight;
+async function aiAsk(t){if(!(await ProGate.canUse('chat')))return;ProGate.use('chat');const m=document.getElementById('ai-msgs');const d=document.createElement('div');d.className='ai-m ai-user';d.innerText=t;m.appendChild(d);m.scrollTop=m.scrollHeight;const ty=document.createElement('div');ty.className='ai-typing';ty.innerText='AI soch raha hai...';m.appendChild(ty);m.scrollTop=m.scrollHeight;
 /* Pehle backend (/api/chat -> Gemini) try karo, fail ho to local knowledge base */
 fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:t})})
 .then(r=>r.json())
@@ -250,6 +227,12 @@ function sendAI(){const i=document.getElementById('ai-text');const t=i.value.tri
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script src="js/firebase-config.js"></script>
+<script src="js/pro.js"></script>
 <script src="js/auth.js"></script>
+<!-- Vercel Analytics -->
+<script>
+window.va = window.va || function(){(window.vaq = window.vaq || []).push(arguments);};
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
 <script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body>
 </html>
