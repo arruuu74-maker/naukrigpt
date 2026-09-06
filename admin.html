@@ -23,6 +23,7 @@ button{border:none;border-radius:10px;padding:12px 20px;font-size:15px;font-weig
 .row{display:flex;gap:10px;margin-top:10px}
 .row button{flex:1}
 .proitem{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:14px}
+#jsstatus{font-size:12px;color:#94a3b8;margin-top:10px;text-align:center}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
@@ -36,7 +37,8 @@ button{border:none;border-radius:10px;padding:12px 20px;font-size:15px;font-weig
 <p class="sub">Sirf owner ke liye — password daalo</p>
 <div class="card">
 <input type="password" id="apass" placeholder="Password" autocomplete="off" autocapitalize="off">
-<button class="btn" onclick="unlock()">Unlock</button>
+<button class="btn" onclick="try{unlock()}catch(e){alert('BUTTON ERROR: '+e.message)}">Unlock</button>
+<p id="jsstatus">JS check ho raha...</p>
 </div>
 </div>
 <div id="admin" class="hidden">
@@ -112,6 +114,7 @@ async function loadPros(){
     document.getElementById('prolist').innerHTML = h;
   }catch(e){ document.getElementById('prolist').innerHTML = '<p style="color:#ef4444">Load nahi hua: '+e.message+'</p>'; }
 }
+document.getElementById('jsstatus').textContent = 'JS loaded OK';
 </script>
 </body>
 </html>
