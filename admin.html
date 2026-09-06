@@ -32,36 +32,40 @@ button{border:none;border-radius:10px;padding:12px 20px;font-size:15px;font-weig
 <body>
 <div class="wrap">
 <div id="lock">
-<h1>🔐 Admin Panel</h1>
+<h1>Admin Panel</h1>
 <p class="sub">Sirf owner ke liye — password daalo</p>
 <div class="card">
 <input type="password" id="apass" placeholder="Password" autocomplete="off" autocapitalize="off">
-<button class="btn" onclick="unlock()">Unlock 🔓</button>
+<button class="btn" onclick="unlock()">Unlock</button>
 </div>
 </div>
 <div id="admin" class="hidden">
-<h1>🛠️ NaukriGPT Admin</h1>
+<h1>NaukriGPT Admin</h1>
 <p class="sub">Pro activate / deactivate karo</p>
 <div class="card">
-<h3>🔍 User dhoondo</h3><br>
+<h3>User dhoondo</h3><br>
 <input id="q" placeholder="user ka email likho" autocapitalize="off">
 <button class="btn" onclick="findUser()">Search</button>
 <div id="uresult" style="margin-top:12px"></div>
 </div>
 <div class="card">
-<h3>⭐ Pro Users (<span id="pcount">0</span>)</h3>
+<h3>Pro Users (<span id="pcount">0</span>)</h3>
 <div id="prolist"><p style="color:#94a3b8">Load ho raha...</p></div>
 </div>
 </div>
 </div>
 <script>
-const ADMIN_PASS = "naukri123";
-let db;
+var ADMIN_PASS = "naukri123";
+var db = null;
 function unlock(){
-  if(typeof firebase==='undefined'){ alert('❌ Firebase load nahi hua! Page refresh karke dobara try karo.'); return; }
-  if(document.getElementById('apass').value.trim().toLowerCase()!== ADMIN_PASS){ alert('❌ Galat password!'); return; }
+  var p = document.getElementById('apass').value.trim().toLowerCase();
+  if(p!== ADMIN_PASS){ alert('Galat password!'); return; }
   document.getElementById('lock').classList.add('hidden');
   document.getElementById('admin').classList.remove('hidden');
+  if(typeof firebase === 'undefined'){
+    document.getElementById('prolist').innerHTML = '<p style="color:#ef4444">Firebase load NAHI ho raha! Page refresh karo ya WiFi pe try karo.</p>';
+    return;
+  }
   db = firebase.firestore();
   firebase.auth().onAuthStateChanged(function(u){
     if(!u){ alert('Pehle login karo!'); location.href='login.html'; return; }
@@ -69,38 +73,42 @@ function unlock(){
   });
 }
 async function findUser(){
-  const email = document.getElementById('q').value.trim().toLowerCase();
-  const box = document.getElementById('uresult');
+  var email = document.getElementById('q').value.trim().toLowerCase();
+  var box = document.getElementById('uresult');
   if(!email){ box.innerHTML=''; return; }
+  if(!db){ box.innerHTML = '<p style="color:#ef4444">Firebase load nahi hua! Page refresh karo.</p>'; return; }
   box.innerHTML = '<p style="color:#94a3b8">Dhoondh rahe...</p>';
   try{
-    const s = await db.collection('users').where('email','==',email).limit(1).get();
-    if(s.empty){ box.innerHTML = '<p style="color:#ef4444">❌ Ye email registered nahi hai.</p>'; return; }
-    const doc = s.docs[0], d = doc.data(), pro =!!d.isPro;
-    let h = '<div class="stat"><span>Email</span><b>'+email+'</b></div>';
-    h += '<div class="stat"><span>Status</span>'+(pro?'<span class="badge">PRO ⭐</span>':'<span class="badge free">FREE</span>')+'</div>';
+    var s = await db.collection('users').where('email','==',email).limit(1).get();
+    if(s.empty){ box.innerHTML = '<p style="color:#ef4444">Ye email registered nahi hai.</p>'; return; }
+    var doc = s.docs[0];
+    var d = doc.data();
+    var pro =!!d.isPro;
+    var h = '<div class="stat"><span>Email</span><b>'+email+'</b></div>';
+    h += '<div class="stat"><span>Status</span>'+(pro?'<span class="badge">PRO</span>':'<span class="badge free">FREE</span>')+'</div>';
     h += '<div class="stat"><span>Resume scans (is mahine)</span><b>'+(d.scansUsed||0)+'/3</b></div>';
     h += '<div class="stat"><span>AI chats (aaj)</span><b>'+(d.chatsUsed||0)+'/10</b></div>';
-    h += '<div class="row">';
-    if(pro){ h += '<button class="red" onclick="setPro(\''+doc.id+'\',false)">Pro hatao</button>'; }
-    else{ h += '<button class="green" onclick="setPro(\''+doc.id+'\',true)">PRO banao ⭐</button>'; }
-    h += '</div>';
+    h += '<div class="row"><button id="proBtn" class="'+(pro?'red':'green')+'">'+(pro?'Pro hatao':'PRO banao')+'</button></div>';
     box.innerHTML = h;
-  }catch(e){ box.innerHTML = '<p style="color:#ef4444">❌ Error: '+e.message+'</p>'; }
+    document.getElementById('proBtn').addEventListener('click', function(){ setPro(doc.id,!pro); });
+  }catch(e){ box.innerHTML = '<p style="color:#ef4444">Error: '+e.message+'</p>'; }
 }
-async function setPro(uid,val){
+async function setPro(uid, val){
+  if(!db){ alert('Firebase load nahi hua!'); return; }
   if(!confirm(val?'Is user ko PRO bana dein?':'Is user se PRO hata dein?')) return;
   await db.collection('users').doc(uid).update({isPro:val});
-  alert(val?'✅ PRO activated! 🎉':'Pro hata diya.');
-  findUser(); loadPros();
+  alert(val?'PRO activated!':'Pro hata diya.');
+  findUser();
+  loadPros();
 }
 async function loadPros(){
+  if(!db){ return; }
   try{
-    const s = await db.collection('users').where('isPro','==',true).get();
+    var s = await db.collection('users').where('isPro','==',true).get();
     document.getElementById('pcount').textContent = s.size;
     if(s.empty){ document.getElementById('prolist').innerHTML = '<p style="color:#94a3b8">Abhi koi Pro user nahi hai.</p>'; return; }
-    let h = '';
-    s.docs.forEach(function(d){ h += '<div class="proitem"><span>'+(d.data().email||d.id)+'</span><span class="badge">PRO ⭐</span></div>'; });
+    var h = '';
+    s.docs.forEach(function(d){ h += '<div class="proitem"><span>'+(d.data().email||d.id)+'</span><span class="badge">PRO</span></div>'; });
     document.getElementById('prolist').innerHTML = h;
   }catch(e){ document.getElementById('prolist').innerHTML = '<p style="color:#ef4444">Load nahi hua: '+e.message+'</p>'; }
 }
