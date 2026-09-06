@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Checkpoint Test</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+</head><body style="background:#111;color:#fff;font-family:sans-serif;padding:20px">
+<h2>Checkpoint Test</h2>
+<p id="ck">ck: waiting (script shuru hi nahi hua = parse error)</p>
+<div id="L" style="display:none"><input id="ap"><button id="ub"></button><p id="js"></p></div>
+<div id="A" style="display:none"><input id="q"><button id="sb"></button><div id="ur"></div><span id="pc"></span><div id="pl"></div></div>
+<script>
+function CK(n){document.getElementById('ck').textContent='ck: checkpoint '+n+' OK'}
+CK(1);
+
+var PASS="naukri123",db=null;
+function unlock(){var p=document.getElementById('ap').value.trim().toLowerCase();if(p!==PASS){alert('Galat password!');return}document.getElementById('L').classList.add('h');document.getElementById('A').classList.remove('h');if(typeof firebase==='undefined'){document.getElementById('pl').innerHTML='<p style="color:#ef4444">Firebase load nahi hua! Refresh karo.</p>';return}db=firebase.firestore();firebase.auth().onAuthStateChanged(function(u){if(!u){alert('Pehle login karo!');location.href='login.html';return}loadP()})}
+CK(2);
+async function findU(){var e=document.getElementById('q').value.trim().toLowerCase(),box=document.getElementById('ur');if(!e){box.innerHTML='';return}if(!db){box.innerHTML='<p style="color:#ef4444">Firebase nahi loaded. Refresh karo.</p>';return}box.innerHTML='<p style="color:#94a3b8">Dhoondh rahe...</p>';try{var s=await db.collection('users').where('email','==',e).limit(1).get();if(s.empty){box.innerHTML='<p style="color:#ef4444">Ye email registered nahi hai.</p>';return}var d=s.docs[0],v=d.data(),ip=!!v.isPro,x='<div class="s"><span>Email</span><b>'+e+'</b></div><div class="s"><span>Status</span>'+(ip?'<span class="bd">PRO</span>':'<span class="bd f">FREE</span>')+'</div><div class="s"><span>Scans (mahina)</span><b>'+(v.scansUsed||0)+'/3</b></div><div class="s"><span>Chats (aaj)</span><b>'+(v.chatsUsed||0)+'/10</b></div><div class="rw"><button id="pb" class="'+(ip?'r':'g')+'">'+(ip?'Pro hatao':'PRO banao')+'</button></div>';box.innerHTML=x;document.getElementById('pb').onclick=function(){setP(d.id,!ip)}}catch(err){box.innerHTML='<p style="color:#ef4444">Error: '+err.message+'</p>'}}
+CK(3);
+async function setP(uid,val){if(!db){alert('Firebase nahi loaded');return}if(!confirm(val?'PRO bana dein?':'PRO hata dein?'))return;await db.collection('users').doc(uid).update({isPro:val});alert(val?'PRO activated!':'Pro hata diya');findU();loadP()}
+CK(4);
+async function loadP(){if(!db)return;try{var s=await db.collection('users').where('isPro','==',true).get();document.getElementById('pc').textContent=s.size;if(s.empty){document.getElementById('pl').innerHTML='<p style="color:#94a3b8">Koi Pro user nahi.</p>';return}var x='';s.docs.forEach(function(d){x+='<div class="s"><span>'+(d.data().email||d.id)+'</span><span class="bd">PRO</span></div>'});document.getElementById('pl').innerHTML=x}catch(e){document.getElementById('pl').innerHTML='<p style="color:#ef4444">'+e.message+'</p>'}}
+CK(5);
+document.getElementById('ub').onclick=function(){try{unlock()}catch(e){alert('ERR: '+e.message)}};
+document.getElementById('sb').onclick=function(){findU()};
+CK(6);
+document.getElementById('js').textContent='JS loaded OK v5';
+
+CK(7);
+</script></body></html>
