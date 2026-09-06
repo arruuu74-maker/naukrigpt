@@ -35,7 +35,7 @@ button{border:none;border-radius:10px;padding:12px 20px;font-size:15px;font-weig
 <h1>🔐 Admin Panel</h1>
 <p class="sub">Sirf owner ke liye — password daalo</p>
 <div class="card">
-<input type="password" id="apass" placeholder="Password">
+<input type="password" id="apass" placeholder="Password" autocomplete="off" autocapitalize="off">
 <button class="btn" onclick="unlock()">Unlock 🔓</button>
 </div>
 </div>
@@ -44,7 +44,7 @@ button{border:none;border-radius:10px;padding:12px 20px;font-size:15px;font-weig
 <p class="sub">Pro activate / deactivate karo</p>
 <div class="card">
 <h3>🔍 User dhoondo</h3><br>
-<input id="q" placeholder="user ka email likho">
+<input id="q" placeholder="user ka email likho" autocapitalize="off">
 <button class="btn" onclick="findUser()">Search</button>
 <div id="uresult" style="margin-top:12px"></div>
 </div>
@@ -58,11 +58,12 @@ button{border:none;border-radius:10px;padding:12px 20px;font-size:15px;font-weig
 const ADMIN_PASS = "naukri123";
 let db;
 function unlock(){
-  if(document.getElementById('apass').value!== ADMIN_PASS){ alert('❌ Galat password!'); return; }
+  if(typeof firebase==='undefined'){ alert('❌ Firebase load nahi hua! Page refresh karke dobara try karo.'); return; }
+  if(document.getElementById('apass').value.trim().toLowerCase()!== ADMIN_PASS){ alert('❌ Galat password!'); return; }
   document.getElementById('lock').classList.add('hidden');
   document.getElementById('admin').classList.remove('hidden');
   db = firebase.firestore();
-  firebase.auth().onAuthStateChanged(u => {
+  firebase.auth().onAuthStateChanged(function(u){
     if(!u){ alert('Pehle login karo!'); location.href='login.html'; return; }
     loadPros();
   });
@@ -76,14 +77,15 @@ async function findUser(){
     const s = await db.collection('users').where('email','==',email).limit(1).get();
     if(s.empty){ box.innerHTML = '<p style="color:#ef4444">❌ Ye email registered nahi hai.</p>'; return; }
     const doc = s.docs[0], d = doc.data(), pro =!!d.isPro;
-    box.innerHTML =
-      '<div class="stat"><span>Email</span><b>'+email+'</b></div>'+
-      '<div class="stat"><span>Status</span>'+(pro?'<span class="badge">PRO ⭐</span>':'<span class="badge free">FREE</span>')+'</div>'+
-      '<div class="stat"><span>Resume scans (is mahine)</span><b>'+(d.scansUsed||0)+'/3</b></div>'+
-      '<div class="stat"><span>AI chats (aaj)</span><b>'+(d.chatsUsed||0)+'/10</b></div>'+
-      '<div class="row">'+(pro
-       ? '<button class="red" onclick="setPro(\''+doc.id+'\',false)">Pro hatao</button>'
-        : '<button class="green" onclick="setPro(\''+doc.id+'\',true)">PRO banao ⭐</button>')+'</div>';
+    let h = '<div class="stat"><span>Email</span><b>'+email+'</b></div>';
+    h += '<div class="stat"><span>Status</span>'+(pro?'<span class="badge">PRO ⭐</span>':'<span class="badge free">FREE</span>')+'</div>';
+    h += '<div class="stat"><span>Resume scans (is mahine)</span><b>'+(d.scansUsed||0)+'/3</b></div>';
+    h += '<div class="stat"><span>AI chats (aaj)</span><b>'+(d.chatsUsed||0)+'/10</b></div>';
+    h += '<div class="row">';
+    if(pro){ h += '<button class="red" onclick="setPro(\''+doc.id+'\',false)">Pro hatao</button>'; }
+    else{ h += '<button class="green" onclick="setPro(\''+doc.id+'\',true)">PRO banao ⭐</button>'; }
+    h += '</div>';
+    box.innerHTML = h;
   }catch(e){ box.innerHTML = '<p style="color:#ef4444">❌ Error: '+e.message+'</p>'; }
 }
 async function setPro(uid,val){
@@ -96,9 +98,10 @@ async function loadPros(){
   try{
     const s = await db.collection('users').where('isPro','==',true).get();
     document.getElementById('pcount').textContent = s.size;
-    document.getElementById('prolist').innerHTML = s.empty
-     ? '<p style="color:#94a3b8">Abhi koi Pro user nahi hai.</p>'
-      : s.docs.map(d=>'<div class="proitem"><span>'+(d.data().email||d.id)+'</span><span class="badge">PRO ⭐</span></div>').join('');
+    if(s.empty){ document.getElementById('prolist').innerHTML = '<p style="color:#94a3b8">Abhi koi Pro user nahi hai.</p>'; return; }
+    let h = '';
+    s.docs.forEach(function(d){ h += '<div class="proitem"><span>'+(d.data().email||d.id)+'</span><span class="badge">PRO ⭐</span></div>'; });
+    document.getElementById('prolist').innerHTML = h;
   }catch(e){ document.getElementById('prolist').innerHTML = '<p style="color:#ef4444">Load nahi hua: '+e.message+'</p>'; }
 }
 </script>
