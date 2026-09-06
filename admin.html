@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head><style>
+@font-face {
+  font-family: "Optimistic";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/OptimisticAI_VF_Optimized.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Optimistic Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/OptimisticMono_W_TextRegular.woff2") format("woff2");
+}
+:where(html) {
+  font-family: "Optimistic", system-ui, sans-serif;
+}
+:where(code, pre, kbd, samp) {
+  font-family: "Optimistic Mono", ui-monospace, monospace;
+}
+</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Admin - NaukriGPT</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,sans-serif}
+body{background:#0a0a18;color:#fff;min-height:100vh;padding:20px}
+.wrap{max-width:640px;margin:0 auto}
+h1{font-size:22px;margin-bottom:4px}
+.sub{color:#94a3b8;font-size:13px;margin-bottom:20px}
+.card{background:#141428;border:1px solid rgba(139,92,246,.3);border-radius:16px;padding:20px;margin-bottom:16px}
+input{width:100%;background:#0d0d20;border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:12px;color:#fff;font-size:15px;margin-bottom:10px}
+button{border:none;border-radius:10px;padding:12px 20px;font-size:15px;font-weight:700;cursor:pointer}
+.btn{background:linear-gradient(90deg,#8b5cf6,#2563eb);color:#fff;width:100%}
+.green{background:#22c55e;color:#fff}
+.red{background:#ef4444;color:#fff}
+.hidden{display:none}
+.stat{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:14px}
+.badge{background:linear-gradient(90deg,#f59e0b,#ef4444);padding:2px 10px;border-radius:20px;font-size:12px;font-weight:700}
+.free{background:#374151}
+.row{display:flex;gap:10px;margin-top:10px}
+.row button{flex:1}
+.proitem{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:14px}
+#jsstatus{font-size:12px;color:#94a3b8;margin-top:10px;text-align:center}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+</head>
+<body>
+<div class="wrap">
+<div id="lock">
+<h1>Admin Panel</h1>
+<p class="sub">Sirf owner ke liye - password daalo</p>
+<div class="card">
+<input type="password" id="apass" placeholder="Password" autocomplete="off" autocapitalize="off">
+<button class="btn" onclick="try{unlock()}catch(e){alert('BUTTON ERROR: '+e.message)}">Unlock</button>
+<p id="jsstatus">JS check ho raha...</p>
+</div>
+</div>
+<div id="admin" class="hidden">
+<h1>NaukriGPT Admin</h1>
+<p class="sub">Pro activate / deactivate karo</p>
+<div class="card">
+<h3>User dhoondo</h3><br>
+<input id="q" placeholder="user ka email likho" autocapitalize="off">
+<button class="btn" onclick="findUser()">Search</button>
+<div id="uresult" style="margin-top:12px"></div>
+</div>
+<div class="card">
+<h3>Pro Users (<span id="pcount">0</span>)</h3>
+<div id="prolist"><p style="color:#94a3b8">Load ho raha...</p></div>
+</div>
+</div>
+</div>
+<script>
+var ADMINPASS = "naukri123";
+var db = null;
+function unlock(){
+  var p = document.getElementById('apass').value.trim().toLowerCase();
+  if(p !== ADMINPASS){ alert('Galat password!'); return; }
+  document.getElementById('lock').classList.add('hidden');
+  document.getElementById('admin').classList.remove('hidden');
+  if(typeof firebase === 'undefined'){
+    document.getElementById('prolist').innerHTML = '<p style="color:#ef4444">Firebase load NAHI ho raha! Page refresh karo ya WiFi pe try karo.</p>';
+    return;
+  }
+  db = firebase.firestore();
+  firebase.auth().onAuthStateChanged(function(u){
+    if(!u){ alert('Pehle login karo!'); location.href='login.html'; return; }
+    loadPros();
+  });
+}
+async function findUser(){
+  var email = document.getElementById('q').value.trim().toLowerCase();
+  var box = document.getElementById('uresult');
+  if(!email){ box.innerHTML=''; return; }
+  if(!db){ box.innerHTML = '<p style="color:#ef4444">Firebase load nahi hua! Page refresh karo.</p>'; return; }
+  box.innerHTML = '<p style="color:#94a3b8">Dhoondh rahe...</p>';
+  try{
+    var s = await db.collection('users').where('email','==',email).limit(1).get();
+    if(s.empty){ box.innerHTML = '<p style="color:#ef4444">Ye email registered nahi hai.</p>'; return; }
+    var doc = s.docs[0];
+    var d = doc.data();
+    var ispro = !!d.isPro;
+    var h = '<div class="stat"><span>Email</span><b>'+email+'</b></div>';
+    h += '<div class="stat"><span>Status</span>'+(ispro?'<span class="badge">PRO</span>':'<span class="badge free">FREE</span>')+'</div>';
+    h += '<div class="stat"><span>Resume scans (is mahine)</span><b>'+(d.scansUsed||0)+'/3</b></div>';
+    h += '<div class="stat"><span>AI chats (aaj)</span><b>'+(d.chatsUsed||0)+'/10</b></div>';
+    h += '<div class="row"><button id="proBtn" class="'+(ispro?'red':'green')+'">'+(ispro?'Pro hatao':'PRO banao')+'</button></div>';
+    box.innerHTML = h;
+    document.getElementById('proBtn').addEventListener('click', function(){ setPro(doc.id, !ispro); });
+  }catch(e){ box.innerHTML = '<p style="color:#ef4444">Error: '+e.message+'</p>'; }
+}
+async function setPro(uid, val){
+  if(!db){ alert('Firebase load nahi hua!'); return; }
+  if(!confirm(val?'Is user ko PRO bana dein?':'Is user se PRO hata dein?')) return;
+  await db.collection('users').doc(uid).update({isPro:val});
+  alert(val?'PRO activated!':'Pro hata diya.');
+  findUser();
+  loadPros();
+}
+async function loadPros(){
+  if(!db){ return; }
+  try{
+    var s = await db.collection('users').where('isPro','==',true).get();
+    document.getElementById('pcount').textContent = s.size;
+    if(s.empty){ document.getElementById('prolist').innerHTML = '<p style="color:#94a3b8">Abhi koi Pro user nahi hai.</p>'; return; }
+    var h = '';
+    s.docs.forEach(function(d){ h += '<div class="proitem"><span>'+(d.data().email||d.id)+'</span><span class="badge">PRO</span></div>'; });
+    document.getElementById('prolist').innerHTML = h;
+  }catch(e){ document.getElementById('prolist').innerHTML = '<p style="color:#ef4444">Load nahi hua: '+e.message+'</p>'; }
+}
+document.getElementById('jsstatus').textContent = 'JS loaded OK';
+</script>
+<script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body>
+</html>
