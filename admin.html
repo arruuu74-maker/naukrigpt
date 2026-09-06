@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Admin — NaukriGPT</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,sans-serif}
+body{background:#0a0a18;color:#fff;min-height:100vh;padding:20px}
+.wrap{max-width:640px;margin:0 auto}
+h1{font-size:22px;margin-bottom:4px}
+.sub{color:#94a3b8;font-size:13px;margin-bottom:20px}
+.card{background:#141428;border:1px solid rgba(139,92,246,.3);border-radius:16px;padding:20px;margin-bottom:16px}
+input{width:100%;background:#0d0d20;border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:12px;color:#fff;font-size:15px;margin-bottom:10px}
+button{border:none;border-radius:10px;padding:12px 20px;font-size:15px;font-weight:700;cursor:pointer}
+.btn{background:linear-gradient(90deg,#8b5cf6,#2563eb);color:#fff;width:100%}
+.green{background:#22c55e;color:#fff}
+.red{background:#ef4444;color:#fff}
+.hidden{display:none}
+.stat{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:14px}
+.badge{background:linear-gradient(90deg,#f59e0b,#ef4444);padding:2px 10px;border-radius:20px;font-size:12px;font-weight:700}
+.free{background:#374151}
+.row{display:flex;gap:10px;margin-top:10px}
+.row button{flex:1}
+.proitem{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:14px}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+</head>
+<body>
+<div class="wrap">
+<div id="lock">
+<h1>🔐 Admin Panel</h1>
+<p class="sub">Sirf owner ke liye — password daalo</p>
+<div class="card">
+<input type="password" id="apass" placeholder="Password">
+<button class="btn" onclick="unlock()">Unlock 🔓</button>
+</div>
+</div>
+<div id="admin" class="hidden">
+<h1>🛠️ NaukriGPT Admin</h1>
+<p class="sub">Pro activate / deactivate karo</p>
+<div class="card">
+<h3>🔍 User dhoondo</h3><br>
+<input id="q" placeholder="user ka email likho">
+<button class="btn" onclick="findUser()">Search</button>
+<div id="uresult" style="margin-top:12px"></div>
+</div>
+<div class="card">
+<h3>⭐ Pro Users (<span id="pcount">0</span>)</h3>
+<div id="prolist"><p style="color:#94a3b8">Load ho raha...</p></div>
+</div>
+</div>
+</div>
+<script>
+const ADMIN_PASS = "naukri123";
+let db;
+function unlock(){
+  if(document.getElementById('apass').value!== ADMIN_PASS){ alert('❌ Galat password!'); return; }
+  document.getElementById('lock').classList.add('hidden');
+  document.getElementById('admin').classList.remove('hidden');
+  db = firebase.firestore();
+  firebase.auth().onAuthStateChanged(u => {
+    if(!u){ alert('Pehle login karo!'); location.href='login.html'; return; }
+    loadPros();
+  });
+}
+async function findUser(){
+  const email = document.getElementById('q').value.trim().toLowerCase();
+  const box = document.getElementById('uresult');
+  if(!email){ box.innerHTML=''; return; }
+  box.innerHTML = '<p style="color:#94a3b8">Dhoondh rahe...</p>';
+  try{
+    const s = await db.collection('users').where('email','==',email).limit(1).get();
+    if(s.empty){ box.innerHTML = '<p style="color:#ef4444">❌ Ye email registered nahi hai.</p>'; return; }
+    const doc = s.docs[0], d = doc.data(), pro =!!d.isPro;
+    box.innerHTML =
+      '<div class="stat"><span>Email</span><b>'+email+'</b></div>'+
+      '<div class="stat"><span>Status</span>'+(pro?'<span class="badge">PRO ⭐</span>':'<span class="badge free">FREE</span>')+'</div>'+
+      '<div class="stat"><span>Resume scans (is mahine)</span><b>'+(d.scansUsed||0)+'/3</b></div>'+
+      '<div class="stat"><span>AI chats (aaj)</span><b>'+(d.chatsUsed||0)+'/10</b></div>'+
+      '<div class="row">'+(pro
+       ? '<button class="red" onclick="setPro(\''+doc.id+'\',false)">Pro hatao</button>'
+        : '<button class="green" onclick="setPro(\''+doc.id+'\',true)">PRO banao ⭐</button>')+'</div>';
+  }catch(e){ box.innerHTML = '<p style="color:#ef4444">❌ Error: '+e.message+'</p>'; }
+}
+async function setPro(uid,val){
+  if(!confirm(val?'Is user ko PRO bana dein?':'Is user se PRO hata dein?')) return;
+  await db.collection('users').doc(uid).update({isPro:val});
+  alert(val?'✅ PRO activated! 🎉':'Pro hata diya.');
+  findUser(); loadPros();
+}
+async function loadPros(){
+  try{
+    const s = await db.collection('users').where('isPro','==',true).get();
+    document.getElementById('pcount').textContent = s.size;
+    document.getElementById('prolist').innerHTML = s.empty
+     ? '<p style="color:#94a3b8">Abhi koi Pro user nahi hai.</p>'
+      : s.docs.map(d=>'<div class="proitem"><span>'+(d.data().email||d.id)+'</span><span class="badge">PRO ⭐</span></div>').join('');
+  }catch(e){ document.getElementById('prolist').innerHTML = '<p style="color:#ef4444">Load nahi hua: '+e.message+'</p>'; }
+}
+</script>
+</body>
+</html>
