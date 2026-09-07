@@ -1,0 +1,52 @@
+<!DOCTYPE html><html><head><style>
+@font-face {
+  font-family: "Optimistic";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/OptimisticAI_VF_Optimized.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Optimistic Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/OptimisticMono_W_TextRegular.woff2") format("woff2");
+}
+:where(html) {
+  font-family: "Optimistic", system-ui, sans-serif;
+}
+:where(code, pre, kbd, samp) {
+  font-family: "Optimistic Mono", ui-monospace, monospace;
+}
+</style><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Chunk Test</title></head><body style="background:#111;color:#fff;font-family:sans-serif;padding:20px"><h2>Chunk Test</h2>
+<div style="display:none"><input id="ap"><button id="ub"></button><p id="js"></p><input id="q"><button id="sb"></button><div id="ur"></div><span id="pc"></span><div id="pl"></div><div id="L"></div><div id="A"></div></div>
+<p id="k0">k0: waiting</p>
+<script>
+var PASS="naukri123",db=null;
+document.getElementById('k0').textContent='k0 OK';
+</script>
+<p id="k1">k1: waiting</p>
+<script>
+function unlock(){var p=document.getElementById('ap').value.trim().toLowerCase();if(p!==PASS){alert('Galat password!');return}document.getElementById('L').classList.add('h');document.getElementById('A').classList.remove('h');if(typeof firebase==='undefined'){document.getElementById('pl').innerHTML='<p style="color:#ef4444">Firebase load nahi hua! Refresh karo.</p>';return}db=firebase.firestore();firebase.auth().onAuthStateChanged(function(u){if(!u){alert('Pehle login karo!');location.href='login.html';return}loadP()})}
+document.getElementById('k1').textContent='k1 OK';
+</script>
+<p id="k2">k2: waiting</p>
+<script>
+async function findU(){var e=document.getElementById('q').value.trim().toLowerCase(),box=document.getElementById('ur');if(!e){box.innerHTML='';return}if(!db){box.innerHTML='<p style="color:#ef4444">Firebase nahi loaded. Refresh karo.</p>';return}box.innerHTML='<p style="color:#94a3b8">Dhoondh rahe...</p>';try{var s=await db.collection('users').where('email','==',e).limit(1).get();if(s.empty){box.innerHTML='<p style="color:#ef4444">Ye email registered nahi hai.</p>';return}var d=s.docs[0],v=d.data(),ip=!!v.isPro,x='<div class="s"><span>Email</span><b>'+e+'</b></div><div class="s"><span>Status</span>'+(ip?'<span class="bd">PRO</span>':'<span class="bd f">FREE</span>')+'</div><div class="s"><span>Scans (mahina)</span><b>'+(v.scansUsed||0)+'/3</b></div><div class="s"><span>Chats (aaj)</span><b>'+(v.chatsUsed||0)+'/10</b></div><div class="rw"><button id="pb" class="'+(ip?'r':'g')+'">'+(ip?'Pro hatao':'PRO banao')+'</button></div>';box.innerHTML=x;document.getElementById('pb').onclick=function(){setP(d.id,!ip)}}catch(err){box.innerHTML='<p style="color:#ef4444">Error: '+err.message+'</p>'}}
+document.getElementById('k2').textContent='k2 OK';
+</script>
+<p id="k3">k3: waiting</p>
+<script>
+async function setP(uid,val){if(!db){alert('Firebase nahi loaded');return}if(!confirm(val?'PRO bana dein?':'PRO hata dein?'))return;await db.collection('users').doc(uid).update({isPro:val});alert(val?'PRO activated!':'Pro hata diya');findU();loadP()}
+document.getElementById('k3').textContent='k3 OK';
+</script>
+<p id="k4">k4: waiting</p>
+<script>
+async function loadP(){if(!db)return;try{var s=await db.collection('users').where('isPro','==',true).get();document.getElementById('pc').textContent=s.size;if(s.empty){document.getElementById('pl').innerHTML='<p style="color:#94a3b8">Koi Pro user nahi.</p>';return}var x='';s.docs.forEach(function(d){x+='<div class="s"><span>'+(d.data().email||d.id)+'</span><span class="bd">PRO</span></div>'});document.getElementById('pl').innerHTML=x}catch(e){document.getElementById('pl').innerHTML='<p style="color:#ef4444">'+e.message+'</p>'}}
+document.getElementById('ub').onclick=function(){try{unlock()}catch(e){alert('ERR: '+e.message)}};
+document.getElementById('sb').onclick=function(){findU()};
+document.getElementById('js').textContent='JS loaded OK v5';
+document.getElementById('k4').textContent='k4 OK';
+</script>
+<script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body></html>
