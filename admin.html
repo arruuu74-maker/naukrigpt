@@ -1,21 +1,64 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Admin v5 - NaukriGPT</title>
-<style>*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}body{background:#0a0a18;color:#fff;padding:20px}.w{max-width:600px;margin:auto}.c{background:#141428;border:1px solid #8b5cf655;border-radius:14px;padding:18px;margin:12px 0}input{width:100%;background:#0d0d20;border:1px solid #ffffff26;border-radius:10px;padding:12px;color:#fff;font-size:15px;margin-bottom:10px}button{border:0;border-radius:10px;padding:12px;font-size:15px;font-weight:700;cursor:pointer}.b{background:linear-gradient(90deg,#8b5cf6,#2563eb);color:#fff;width:100%}.g{background:#22c55e;color:#fff}.r{background:#ef4444;color:#fff}.h{display:none}.s{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #ffffff14;font-size:14px}.bd{background:linear-gradient(90deg,#f59e0b,#ef4444);padding:2px 10px;border-radius:20px;font-size:12px;font-weight:700}.f{background:#374151}.rw{display:flex;gap:10px;margin-top:10px}.rw button{flex:1}#js{font-size:12px;color:#94a3b8;margin-top:10px;text-align:center}</style>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-<script src="js/firebase-config.js"></script>
-</head><body><div class="w">
-<div id="L"><h2>Admin Panel <span style="font-size:11px;color:#94a3b8">v5</span></h2><p style="color:#94a3b8;font-size:13px;margin:4px 0 12px">Password daalo</p><div class="c"><input type="password" id="ap" placeholder="Password" autocomplete="off"><button class="b" id="ub">Unlock</button><p id="js">JS check ho raha...</p></div></div>
-<div id="A" class="h"><h2>NaukriGPT Admin <span style="font-size:11px;color:#94a3b8">v5</span></h2><div class="c"><input id="q" placeholder="user ka email likho"><button class="b" id="sb">Search</button><div id="ur" style="margin-top:10px"></div></div><div class="c"><b>Pro Users (<span id="pc">0</span>)</b><div id="pl" style="margin-top:8px"><p style="color:#94a3b8">Load ho raha...</p></div></div></div>
-</div><script>
+<html lang="hi">
+<head><style>
+@font-face {
+  font-family: "Optimistic";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/OptimisticAI_VF_Optimized.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Optimistic Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/OptimisticMono_W_TextRegular.woff2") format("woff2");
+}
+:where(html) {
+  font-family: "Optimistic", system-ui, sans-serif;
+}
+:where(code, pre, kbd, samp) {
+  font-family: "Optimistic Mono", ui-monospace, monospace;
+}
+</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NaukriGPT Admin v6</title>
+<style>
+body{font-family:sans-serif;background:#0f172a;color:#fff;margin:0;padding:16px}
+input{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:1px solid #334155;background:#1e293b;color:#fff;box-sizing:border-box}
+button{width:100%;padding:12px;background:#6366f1;color:#fff;border:none;border-radius:8px;font-size:16px;margin:8px 0}
+.card{background:#1e293b;padding:12px;border-radius:8px;margin:8px 0}
+.h{display:none}
+</style>
+</head>
+<body>
+<div id="L">
+<h2>Admin Panel <small style="color:#888">v6</small></h2>
+<input type="password" id="ap" placeholder="Password">
+<button id="ub">Unlock</button>
+<p id="js" style="color:#fbbf24">JS check ho raha...</p>
+</div>
+<div id="A" class="h">
+<h2>Admin Panel</h2>
+<input id="q" placeholder="Email se dhoondo">
+<button id="sb">Search</button>
+<div id="ur"></div>
+<h3>PRO Users (<span id="pc">0</span>)</h3>
+<div id="pl">Load ho raha...</div>
+<button onclick="location.href='index.html'">Wapas</button>
+</div>
+<script>
+function loadFB(cb){var urls=["https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js","https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js","https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js","js/firebase-config.js"];var i=0;function nx(){if(i>=urls.length){cb();return}var s=document.createElement("script");s.src=urls[i];i++;s.onload=nx;s.onerror=function(){alert("Load fail - net check karo")};document.head.appendChild(s)}nx()}
+function unlock(){var p=document.getElementById("ap").value.trim().toLowerCase();if(p!==PASS){alert("Galat password!");return}document.getElementById("L").classList.add("h");document.getElementById("A").classList.remove("h");loadFB(function(){if(typeof firebase==="undefined"){alert("Firebase load nahi hua! WiFi pe try karo.");return}db=firebase.firestore();firebase.auth().onAuthStateChanged(function(u){if(!u){alert("Pehle login karo!");location.href="login.html";return}loadP()})})}
 var PASS="naukri123",db=null;
-function unlock(){var p=document.getElementById('ap').value.trim().toLowerCase();if(p!==PASS){alert('Galat password!');return}document.getElementById('L').classList.add('h');document.getElementById('A').classList.remove('h');if(typeof firebase==='undefined'){document.getElementById('pl').innerHTML='<p style="color:#ef4444">Firebase load nahi hua! Refresh karo.</p>';return}db=firebase.firestore();firebase.auth().onAuthStateChanged(function(u){if(!u){alert('Pehle login karo!');location.href='login.html';return}loadP()})}
 async function findU(){var e=document.getElementById('q').value.trim().toLowerCase(),box=document.getElementById('ur');if(!e){box.innerHTML='';return}if(!db){box.innerHTML='<p style="color:#ef4444">Firebase nahi loaded. Refresh karo.</p>';return}box.innerHTML='<p style="color:#94a3b8">Dhoondh rahe...</p>';try{var s=await db.collection('users').where('email','==',e).limit(1).get();if(s.empty){box.innerHTML='<p style="color:#ef4444">Ye email registered nahi hai.</p>';return}var d=s.docs[0],v=d.data(),ip=!!v.isPro,x='<div class="s"><span>Email</span><b>'+e+'</b></div><div class="s"><span>Status</span>'+(ip?'<span class="bd">PRO</span>':'<span class="bd f">FREE</span>')+'</div><div class="s"><span>Scans (mahina)</span><b>'+(v.scansUsed||0)+'/3</b></div><div class="s"><span>Chats (aaj)</span><b>'+(v.chatsUsed||0)+'/10</b></div><div class="rw"><button id="pb" class="'+(ip?'r':'g')+'">'+(ip?'Pro hatao':'PRO banao')+'</button></div>';box.innerHTML=x;document.getElementById('pb').onclick=function(){setP(d.id,!ip)}}catch(err){box.innerHTML='<p style="color:#ef4444">Error: '+err.message+'</p>'}}
 async function setP(uid,val){if(!db){alert('Firebase nahi loaded');return}if(!confirm(val?'PRO bana dein?':'PRO hata dein?'))return;await db.collection('users').doc(uid).update({isPro:val});alert(val?'PRO activated!':'Pro hata diya');findU();loadP()}
 async function loadP(){if(!db)return;try{var s=await db.collection('users').where('isPro','==',true).get();document.getElementById('pc').textContent=s.size;if(s.empty){document.getElementById('pl').innerHTML='<p style="color:#94a3b8">Koi Pro user nahi.</p>';return}var x='';s.docs.forEach(function(d){x+='<div class="s"><span>'+(d.data().email||d.id)+'</span><span class="bd">PRO</span></div>'});document.getElementById('pl').innerHTML=x}catch(e){document.getElementById('pl').innerHTML='<p style="color:#ef4444">'+e.message+'</p>'}}
 document.getElementById('ub').onclick=function(){try{unlock()}catch(e){alert('ERR: '+e.message)}};
 document.getElementById('sb').onclick=function(){findU()};
-document.getElementById('js').textContent='JS loaded OK v5';
-</script></body></html>
+document.getElementById('js').textContent='JS loaded OK v6';
+</script>
+<script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body>
+</html>
