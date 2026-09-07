@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head><style>
+@font-face {
+  font-family: "Optimistic";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/OptimisticAI_VF_Optimized.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Optimistic Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/OptimisticMono_W_TextRegular.woff2") format("woff2");
+}
+:where(html) {
+  font-family: "Optimistic", system-ui, sans-serif;
+}
+:where(code, pre, kbd, samp) {
+  font-family: "Optimistic Mono", ui-monospace, monospace;
+}
+</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Services - NaukriGPT</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a18;color:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh}
+.wrap{max-width:1000px;margin:0 auto;padding:0 16px 60px}
+.hero{text-align:center;padding:50px 0 20px}
+.badge{display:inline-block;border:1px solid rgba(168,85,247,.4);background:rgba(168,85,247,.1);color:#d8b4fe;border-radius:999px;padding:6px 16px;font-size:13px}
+h1{font-size:clamp(30px,6vw,48px);font-weight:800;margin-top:14px;line-height:1.2}
+h1 .grad{background:linear-gradient(90deg,#c084fc,#f0abfc,#60a5fa);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:#cbd5e1;margin-top:10px;font-size:16px;line-height:1.6}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:32px}
+.card{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);border-radius:16px;padding:24px;position:relative}
+.card.pop{border-color:rgba(168,85,247,.5);background:rgba(168,85,247,.07)}
+.tag{position:absolute;top:-12px;right:16px;background:linear-gradient(90deg,#8b5cf6,#2563eb);font-size:12px;font-weight:700;padding:4px 12px;border-radius:999px}
+.emoji{font-size:40px}
+.card h3{margin:10px 0 4px;font-size:21px}
+.price{font-size:28px;font-weight:800;color:#4ade80;margin:6px 0}
+.price s{color:#64748b;font-size:16px;font-weight:400;margin-left:8px}
+ul{list-style:none;margin:14px 0;color:#cbd5e1;font-size:14.5px;line-height:1.9}
+ul li:before{content:"\2713 ";color:#4ade80;font-weight:700}
+.meta{color:#94a3b8;font-size:13px;margin-bottom:14px}
+.btn{display:block;text-align:center;border-radius:12px;padding:14px;font-size:16px;font-weight:700;cursor:pointer;text-decoration:none;border:none;width:100%}
+.btn-wa{background:#22c55e;color:#062d16}
+.btn-main{background:linear-gradient(90deg,#8b5cf6,#2563eb);color:#fff}
+.pay{margin-top:48px;border:1px solid rgba(74,222,128,.3);background:rgba(74,222,128,.05);border-radius:16px;padding:28px;text-align:center}
+.pay h2{font-size:24px;margin-bottom:6px}
+.steps{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:18px 0}
+.step{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 16px;font-size:14px;max-width:220px}
+.step b{color:#4ade80}
+.qr{background:#fff;border-radius:16px;padding:16px;display:inline-block;margin:10px 0}
+.qr img{width:220px;height:220px;display:block}
+.note{color:#94a3b8;font-size:13.5px;margin-top:10px;line-height:1.7}
+.how{margin-top:48px}
+.how h2{text-align:center;font-size:24px;margin-bottom:18px}
+.hrow{display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px;margin-bottom:10px}
+.n{background:linear-gradient(90deg,#8b5cf6,#2563eb);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0}
+.hrow p{color:#cbd5e1;font-size:14.5px;line-height:1.6}
+.hrow b{color:#fff}
+.back{display:block;text-align:center;margin-top:36px;color:#94a3b8;text-decoration:none;font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hero">
+<div class="badge">🔥 Limited Offer - Pehle 20 customers ko 20% OFF</div>
+<h1>NaukriGPT <span class="grad">Services</span></h1>
+<p class="sub">AI + human expert ka combo. Resume, LinkedIn, Cover Letter — sab professional, 24 ghante me delivery.</p>
+</div>
+
+<div class="cards">
+
+<div class="card pop">
+<div class="tag">SABSE POPULAR</div>
+<div class="emoji">📄</div>
+<h3>Resume Rewrite</h3>
+<div class="price">₹499 <s>₹999</s></div>
+<ul>
+<li>Poora resume professional rewrite</li>
+<li>ATS-friendly format + design</li>
+<li>Strong action words, no bakwas</li>
+<li>PDF ready-to-apply</li>
+<li>1 free revision</li>
+</ul>
+<div class="meta">⏱︎ Delivery: 24 ghante</div>
+<button class="btn btn-wa" onclick="order('Resume Rewrite','499')">📲 WhatsApp pe Order Karo</button>
+</div>
+
+<div class="card">
+<div class="emoji">💼</div>
+<h3>LinkedIn Makeover</h3>
+<div class="price">₹399 <s>₹799</s></div>
+<ul>
+<li>Headline jo HR ko roke</li>
+<li>About section ki poori kahani</li>
+<li>Experience bullets rewrite</li>
+<li>Copy-paste ready document</li>
+<li>Profile tips free</li>
+</ul>
+<div class="meta">⏱︎ Delivery: 24 ghante</div>
+<button class="btn btn-wa" onclick="order('LinkedIn Makeover','399')">📲 WhatsApp pe Order Karo</button>
+</div>
+
+<div class="card">
+<div class="emoji">✉︎</div>
+<h3>Cover Letter</h3>
+<div class="price">₹149 <s>₹299</s></div>
+<ul>
+<li>Har job ke liye customized</li>
+<li>200 words, to-the-point</li>
+<li>Company + role ke hisaab se</li>
+<li>Ready-to-send format</li>
+</ul>
+<div class="meta">⏱︎ Delivery: 12 ghante</div>
+<button class="btn btn-wa" onclick="order('Cover Letter','149')">📲 WhatsApp pe Order Karo</button>
+</div>
+
+</div>
+
+<div class="pay">
+<h2>💳 Payment Kaise Karein?</h2>
+<p class="sub">3 simple steps:</p>
+<div class="steps">
+<div class="step"><b>Step 1:</b><br>Upar service ka order button dabao</div>
+<div class="step"><b>Step 2:</b><br>Neeche QR scan karke payment karo</div>
+<div class="step"><b>Step 3:</b><br>Payment screenshot WhatsApp pe bhejo</div>
+</div>
+<div class="qr"><img src="upi-qr.png" alt="UPI QR Code"></div>
+<p class="note">QR scan karo, amount daalo, payment karo.<br>Screenshot bhejte hi tumhara kaam shuru! 🚀</p>
+</div>
+
+<div class="how">
+<h2>🚀 Kaam Kaise Hoga?</h2>
+<div class="hrow"><div class="n">1</div><p><b>Order karo</b> — WhatsApp button dabao, service select ho jayegi</p></div>
+<div class="hrow"><div class="n">2</div><p><b>Payment karo</b> — UPI QR scan karke, screenshot bhejo</p></div>
+<div class="hrow"><div class="n">3</div><p><b>Details bhejo</b> — purana resume / LinkedIn link / job details</p></div>
+<div class="hrow"><div class="n">4</div><p><b>Delivery pao</b> — 24 ghante me professional kaam tumhare WhatsApp pe!</p></div>
+</div>
+
+<a class="back" href="index.html">← Wapas Home</a>
+</div>
+
+<script>
+var WA_NUMBER = "917752054396";
+function order(service, price){
+var msg = "Namaste! Mujhe *" + service + "* (Rs." + price + ") order karna hai. Payment kar diya hai, screenshot bhej raha hun.";
+window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msg), "_blank");
+}
+</script>
+<script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body>
+</html>
