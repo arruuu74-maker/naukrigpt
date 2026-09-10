@@ -25,6 +25,48 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Services - NaukriGPT</title>
+<style>/*MILLENNIUM-CSS*/
+/*MILLENNIUM-CSS*/
+:root{--mg-bg:#04050e;--mg-green:#3dff7c;--mg-g2:#22c55e;--mg-mint:#a7f3d0}
+.ng-base{position:fixed;inset:0;z-index:-4;pointer-events:none;background:radial-gradient(1000px 600px at 50% -5%,rgba(34,197,94,.08),transparent 60%),radial-gradient(900px 700px at 90% 110%,rgba(37,99,235,.10),transparent 60%),#04050e}
+.ng-net{position:fixed;inset:0;z-index:-3;pointer-events:none}
+.ng-glow{position:absolute;border-radius:50%;filter:blur(100px);opacity:.35;pointer-events:none}
+.ng-glow.g1{width:420px;height:420px;left:-100px;top:-60px;background:radial-gradient(circle,rgba(34,197,94,.35),transparent 70%);animation:drift1 20s ease-in-out infinite alternate}
+.ng-glow.g2{width:380px;height:380px;right:-80px;bottom:-80px;background:radial-gradient(circle,rgba(37,99,235,.30),transparent 70%);animation:drift2 24s ease-in-out infinite alternate}
+@keyframes drift1{to{transform:translate(90px,70px) scale(1.12)}}
+@keyframes drift2{to{transform:translate(-70px,-60px) scale(1.1)}}
+.reveal{opacity:0;transform:translateY(28px) scale(.985);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1);transition-delay:var(--d,0s)}
+.reveal.visible{opacity:1;transform:none}
+.glass{position:relative;background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02))!important;border:1px solid rgba(255,255,255,.10)!important;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:18px!important;transition:transform .35s cubic-bezier(.22,1,.36,1),border-color .35s,box-shadow .35s}
+.glass::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(135deg,rgba(74,222,128,.5),transparent 35%,transparent 65%,rgba(34,197,94,.5));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .35s;pointer-events:none}
+.glass:hover{transform:translateY(-6px);border-color:rgba(74,222,128,.45)!important;box-shadow:0 18px 50px -12px rgba(34,197,94,.40)}
+.glass:hover::before{opacity:1}
+.btn-glow{position:relative;overflow:hidden;background:linear-gradient(90deg,#22c55e,#4ade80,#22c55e)!important;background-size:200% auto!important;color:#052e16!important;box-shadow:0 8px 28px -6px rgba(34,197,94,.55);transition:transform .25s,box-shadow .25s,background-position .6s!important}
+.btn-glow:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 12px 36px -6px rgba(34,197,94,.75);background-position:right center!important}
+.btn-glow:active{transform:scale(.98)}
+.btn-glow::after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);transform:skewX(-20deg);animation:shimmer 3.5s ease-in-out infinite}
+@keyframes shimmer{0%,60%{left:-80%}100%{left:180%}}
+.grad-anim,.grad{background:linear-gradient(90deg,#4ade80,#d1fae5,#4ade80)!important;background-size:250% auto!important;-webkit-background-clip:text!important;background-clip:text!important;color:transparent!important;animation:gradShift 6s linear infinite}
+@keyframes gradShift{to{background-position:250% center}}
+.badge{border-color:rgba(74,222,128,.45)!important;background:rgba(34,197,94,.10)!important;color:#a7f3d0!important}
+.float-badge{animation:floaty 4s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.icon-glow{position:relative;width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 6px 20px -4px rgba(0,0,0,.5);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.pulse-ring{position:relative}
+.pulse-ring::before{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid rgba(74,222,128,.6);animation:ringPulse 2s ease-out infinite;pointer-events:none}
+@keyframes ringPulse{0%{transform:scale(.9);opacity:1}100%{transform:scale(1.35);opacity:0}}
+#ai-fab{background:linear-gradient(135deg,#22c55e,#4ade80)!important;box-shadow:0 4px 20px rgba(34,197,94,.5)}
+.login-btn{background:linear-gradient(90deg,#22c55e,#4ade80)!important;color:#052e16!important}
+.ng-divider{height:1px;margin:0 auto;max-width:720px;background:linear-gradient(90deg,transparent,rgba(74,222,128,.5),transparent)}
+.mg-marquee{overflow:hidden;background:linear-gradient(90deg,#22c55e,#4ade80);transform:rotate(-2deg);margin:36px -24px;padding:12px 0;box-shadow:0 8px 30px -8px rgba(34,197,94,.5)}
+.mg-track{display:flex;gap:36px;white-space:nowrap;width:max-content;animation:marq 20s linear infinite;font-weight:800;font-size:17px;color:#052e16;letter-spacing:.5px}
+@keyframes marq{to{transform:translateX(-50%)}}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:#060812}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#22c55e,#4ade80);border-radius:8px}
+.stagger>*:nth-child(1){--d:.05s}.stagger>*:nth-child(2){--d:.15s}.stagger>*:nth-child(3){--d:.25s}.stagger>*:nth-child(4){--d:.35s}.stagger>*:nth-child(5){--d:.45s}.stagger>*:nth-child(6){--d:.55s}.stagger>*:nth-child(7){--d:.65s}.stagger>*:nth-child(8){--d:.75s}
+@media(prefers-reduced-motion:reduce){.ng-glow,.btn-glow::after,.float-badge,.pulse-ring::before,.grad-anim,.grad,.mg-track{animation:none!important}.reveal{opacity:1!important;transform:none!important;transition:none!important}}
+</style>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#0a0a18;color:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh}
@@ -68,15 +110,15 @@ ul li:before{content:"\2713 ";color:#4ade80;font-weight:700}
 <body>
 <div class="wrap">
 
-<div class="hero">
-<div class="badge">🔥 Limited Offer - Pehle 20 customers ko 20% OFF</div>
-<h1>NaukriGPT <span class="grad">Services</span></h1>
+<div class="hero reveal">
+<div class="badge float-badge">🔥 Limited Offer - Pehle 20 customers ko 20% OFF</div>
+<h1>NaukriGPT <span class="grad grad-anim">Services</span></h1>
 <p class="sub">AI + human expert ka combo. Resume, LinkedIn, Cover Letter — sab professional, 24 ghante me delivery.</p>
 </div>
 
 <div class="cards">
 
-<div class="card pop">
+<div class="card pop glass">
 <div class="tag">SABSE POPULAR</div>
 <div class="emoji">📄</div>
 <h3>Resume Rewrite</h3>
@@ -92,7 +134,7 @@ ul li:before{content:"\2713 ";color:#4ade80;font-weight:700}
 <button class="btn btn-wa" onclick="order('Resume Rewrite','499')">📲 WhatsApp pe Order Karo</button>
 </div>
 
-<div class="card">
+<div class="card glass">
 <div class="emoji">💼</div>
 <h3>LinkedIn Makeover</h3>
 <div class="price">₹399 <s>₹799</s></div>
@@ -107,7 +149,7 @@ ul li:before{content:"\2713 ";color:#4ade80;font-weight:700}
 <button class="btn btn-wa" onclick="order('LinkedIn Makeover','399')">📲 WhatsApp pe Order Karo</button>
 </div>
 
-<div class="card">
+<div class="card glass">
 <div class="emoji">✉︎</div>
 <h3>Cover Letter</h3>
 <div class="price">₹149 <s>₹299</s></div>
@@ -126,10 +168,10 @@ ul li:before{content:"\2713 ";color:#4ade80;font-weight:700}
 <div class="pay">
 <h2>💳 Payment Kaise Karein?</h2>
 <p class="sub">3 simple steps:</p>
-<div class="steps">
-<div class="step"><b>Step 1:</b><br>Upar service ka order button dabao</div>
-<div class="step"><b>Step 2:</b><br>Neeche QR scan karke payment karo</div>
-<div class="step"><b>Step 3:</b><br>Payment screenshot WhatsApp pe bhejo</div>
+<div class="steps stagger">
+<div class="step glass"><b>Step 1:</b><br>Upar service ka order button dabao</div>
+<div class="step glass"><b>Step 2:</b><br>Neeche QR scan karke payment karo</div>
+<div class="step glass"><b>Step 3:</b><br>Payment screenshot WhatsApp pe bhejo</div>
 </div>
 <div class="qr"><img src="upi-qr.png" alt="UPI QR Code"></div>
 <p class="note">QR scan karo, amount daalo, payment karo.<br>Screenshot bhejte hi tumhara kaam shuru! 🚀</p>
@@ -147,11 +189,43 @@ ul li:before{content:"\2713 ";color:#4ade80;font-weight:700}
 </div>
 
 <script>
-var WA_NUMBER = "917752054396";
+var WA_NUMBER = "919999999999";
 function order(service, price){
 var msg = "Namaste! Mujhe *" + service + "* (Rs." + price + ") order karna hai. Payment kar diya hai, screenshot bhej raha hun.";
 window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msg), "_blank");
 }
+</script>
+<script>/*MILLENNIUM-JS*/
+/*MILLENNIUM-JS*/
+(function(){"use strict";
+var RM=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function sizeCv(cv){cv.width=window.innerWidth;cv.height=window.innerHeight;}
+function makePts(W,H){var n=Math.max(35,Math.min(85,Math.floor(W*H/22000))),p=[],i;for(i=0;i<n;i++){p.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.45,vy:(Math.random()-.5)*.45,r:Math.random()*1.6+.9,g:Math.random()<.7});}return p;}
+function drawFr(ctx,pts,W,H){ctx.clearRect(0,0,W,H);var i,j,p,q,dx,dy,d;
+for(i=0;i<pts.length;i++){p=pts[i];for(j=i+1;j<pts.length;j++){q=pts[j];dx=p.x-q.x;dy=p.y-q.y;d=Math.sqrt(dx*dx+dy*dy);
+if(d<130){ctx.strokeStyle='rgba(74,222,128,'+(0.13*(1-d/130)).toFixed(3)+')';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();}}}
+for(i=0;i<pts.length;i++){p=pts[i];ctx.fillStyle=p.g?'rgba(74,222,128,.55)':'rgba(147,197,253,.5)';ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.283);ctx.fill();}}
+if(!document.querySelector('.ng-net')){
+var base=document.createElement('div');base.className='ng-base';base.innerHTML='<div class="ng-glow g1"></div><div class="ng-glow g2"></div>';document.body.prepend(base);
+var cv=document.createElement('canvas');cv.className='ng-net';document.body.prepend(cv);
+document.body.style.background='transparent';
+var ctx=cv.getContext('2d'),W,H,pts;
+function rs(){sizeCv(cv);W=cv.width;H=cv.height;pts=makePts(W,H);}
+window.addEventListener('resize',rs);rs();
+if(RM){drawFr(ctx,pts,W,H);}else{(function loop(){var i,p;for(i=0;i<pts.length;i++){p=pts[i];p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;}drawFr(ctx,pts,W,H);requestAnimationFrame(loop);})();}}
+var isHome=location.pathname.indexOf('index')!==-1||location.pathname==='/'||location.pathname===''||location.protocol==='file:';
+var hero=document.querySelector('.hero');
+if(isHome&&hero&&!document.querySelector('.mg-marquee')){var t='12,000+ STUDENTS \u2726 6 EXPERT MENTORS \u2726 500+ 1:1 SESSIONS \u2726 100% FREE \u2726 AI CAREER GUIDANCE \u2726 ';var mq=document.createElement('div');mq.className='mg-marquee';mq.innerHTML='<div class="mg-track"><span>'+t+'</span><span>'+t+'</span></div>';hero.insertAdjacentElement('afterend',mq);}
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+function watch(){document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});}
+function auto(){if(document.querySelector('.reveal')){watch();return;}
+var sels=['.hero','.card','.step','.plan','.svc','.cmp','.faq-item','.cta-box','.hrow','section'],n=0;
+sels.forEach(function(s){document.querySelectorAll(s).forEach(function(el){if(el.classList.contains('reveal'))return;el.classList.add('reveal');el.style.setProperty('--d',((n%6)*0.08)+'s');n++;});});watch();}
+function tilt(){if(RM||!window.matchMedia('(pointer:fine)').matches)return;
+document.querySelectorAll('.glass').forEach(function(c){c.addEventListener('mousemove',function(e){var r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform='perspective(900px) rotateY('+(x*7)+'deg) rotateX('+(-y*7)+'deg) translateY(-6px)';});c.addEventListener('mouseleave',function(){c.style.transform='';});});}
+window.NGRefreshMotion=function(){watch();tilt();};
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){auto();tilt();});}else{auto();tilt();}
+})();
 </script>
 <script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body>
 </html>
